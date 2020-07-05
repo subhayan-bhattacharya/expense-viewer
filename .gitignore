@@ -1,0 +1,6 @@
+.ipynb_checkpoints/
+*ipynb*
+*egg*
+.DS_store
+venv/
+Bank statements/
