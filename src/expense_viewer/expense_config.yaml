@@ -1,0 +1,22 @@
+salary:
+  logical_operator: AND
+  identifiers:
+    - value: ""
+      column: ""
+    - value: ""
+      column: ""
+expense_categories:
+  - name: House rent related
+    logical_operation: OR
+    identifiers:
+      - value: ""
+        column: ""
+      - value: ""
+        column: ""
+  - name: Food
+    logical_operation: AND
+    identifiers:
+      - value: ""
+        column: ""
+      - value: ""
+        column: ""
