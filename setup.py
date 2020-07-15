@@ -11,6 +11,8 @@ setuptools.setup(
     description="A small Python package to check the expenses incurred in a month",
     long_description=long_description,
     packages=setuptools.find_packages(),
-    install_requires=["click", "pandas"],
+    package_dir={"": "src"},
+    install_requires=["fire", "pandas"],
+    entry_points={"console_scripts": ["get-expense-details=expense_viewer.cli:main"]},
     python_requires=">=3.7",
 )

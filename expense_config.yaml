@@ -6,7 +6,7 @@ salary:
     - value: ""
       column: ""
 expense_categories:
-  - name: House rent related
+  - name: House related
     logical_operation: OR
     identifiers:
       - value: ""
