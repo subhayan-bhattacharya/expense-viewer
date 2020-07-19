@@ -1,7 +1,8 @@
 .ipynb_checkpoints/
-*ipynb*
+.vscode/
 *egg*
 .DS_store
 venv/
 Bank statements/
 *.pyc
+*.log

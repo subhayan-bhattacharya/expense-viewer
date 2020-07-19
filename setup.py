@@ -12,7 +12,6 @@ setuptools.setup(
     long_description=long_description,
     packages=setuptools.find_packages(),
     package_dir={"": "src"},
-    install_requires=["fire", "pandas"],
-    entry_points={"console_scripts": ["get-expense-details=expense_viewer.cli:main"]},
+    install_requires=["pandas", "ruamel.yaml"],
     python_requires=">=3.7",
 )
