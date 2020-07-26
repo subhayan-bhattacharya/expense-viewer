@@ -8,3 +8,15 @@ class Error(Exception):
 
 class FileOrDirectoryNotFound(Error):
     """Missing file or directory."""
+
+
+class CouldNotLoadYamlFileError(Error):
+    """When a yaml file could not be loaded."""
+
+
+class WrongFormatError(Error):
+    """Wrong format of file supplied."""
+
+
+class CouldNotLoadSalaryStmtError(Error):
+    """When a salary statement could not be loaded."""
