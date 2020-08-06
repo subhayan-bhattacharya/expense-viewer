@@ -9,13 +9,7 @@ import expense_viewer.exceptions as exceptions
 
 EXPECTED_FORMATS = (".csv",)
 
-log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logger = logging.getLogger(__name__)
-logger.setLevel("DEBUG")
-file_handler = logging.FileHandler("expense_viewer.log")
-formatter = logging.Formatter(log_format)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
 
 
 def read_yaml_file_contents(yaml_file_path: pathlib.Path) -> typing.Dict:
@@ -98,7 +92,7 @@ def load_details_from_expense_stmt(
     except Exception as exc:
         message = f"Could not load the details from {expense_statement}"
         logger.error(message, exc_info=True)
-        raise exceptions.CouldNotLoadSalaryStmtError(mesage=message) from exc
+        raise exceptions.CouldNotLoadSalaryStmtError(message=message) from exc
 
 
 def get_expense_report(config_file_path: str, salary_statement_path: str) -> None:
