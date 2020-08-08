@@ -88,6 +88,11 @@ def load_details_from_expense_stmt(
             usecols=columns_to_use,
         )
         transactions.drop(transactions.tail(1).index, inplace=True)
+        transactions["Credit"].fillna("0", inplace=True)
+        transactions["Credit"] = transactions["Credit"].apply(
+            lambda value: value.replace(",", "")
+        )
+        transactions["Credit"] = transactions["Credit"].astype("float64")
         return transactions
     except Exception as exc:
         message = f"Could not load the details from {expense_statement}"

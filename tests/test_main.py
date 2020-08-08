@@ -53,9 +53,9 @@ def test_load_details_from_expense_stmt(tmp_path):
         [3],
         [4],
         ["Transaction Type", "Payment Details", "Debit", "Credit"],
-        ["T", "Some description", "100", "0"],
-        ["F", "Some description2", "150", "20"],
-        ["G", "Some description3", "200", 0],
+        ["T", "Some description", "100.00", "3,300"],
+        ["F", "Some description2", "150.20"],
+        ["G", "Some description3", "200", "2,500.89"],
     ]
 
     dummy_dir = tmp_path / "dummy"
@@ -72,10 +72,13 @@ def test_load_details_from_expense_stmt(tmp_path):
         {
             "Transaction Type": ["T", "F"],
             "Payment Details": ["Some description", "Some description2"],
-            "Debit": ["100", "150"],
-            "Credit": ["0", "20"],
+            "Debit": [100.00, 150.20],
+            "Credit": [3300.00, 0.00],
         }
     )
 
     assert list(output.columns.values) == list(expected_output.columns.values)
+    for column_name in expected_output.columns:
+        assert output[column_name].dtype == expected_output[column_name].dtype
+        assert list(expected_output[column_name]) == list(output[column_name])
 
