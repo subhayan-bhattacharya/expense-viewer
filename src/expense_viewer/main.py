@@ -70,14 +70,20 @@ def load_details_from_expense_stmt(
     expense_statement: pathlib.Path,
 ) -> pd.core.frame.DataFrame:
     """
-    Load the expense details from csv file.
+    Load the expense details from csv file and get back a pandas dataframe.
 
     Parameters
     ----------
     expense_statement : pathlib.Path
         The expense statement full path as a csv file
     """
-    columns_to_use = ["Transaction Type", "Payment Details", "Debit", "Credit"]
+    columns_to_use = [
+        "Transaction Type",
+        "Payment Details",
+        "Debit",
+        "Credit",
+        "Value date",
+    ]
 
     try:
         transactions = pd.read_csv(
@@ -87,6 +93,7 @@ def load_details_from_expense_stmt(
             skiprows=4,
             delimiter=";",
             usecols=columns_to_use,
+            parse_dates=["Value date"],
         )
         transactions.drop(transactions.tail(1).index, inplace=True)
         transactions["Credit"].fillna("0", inplace=True)
