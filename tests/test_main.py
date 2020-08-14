@@ -52,10 +52,10 @@ def test_load_details_from_expense_stmt(tmp_path):
         [2],
         [3],
         [4],
-        ["Transaction Type", "Payment Details", "Debit", "Credit"],
-        ["T", "Some description", "100.00", "3,300"],
-        ["F", "Some description2", "150.20"],
-        ["G", "Some description3", "200", "2,500.89"],
+        ["Transaction Type", "Payment Details", "Debit", "Credit", "Value date"],
+        ["T", "Some description", "100.00", "3,300", "05/18/2020"],
+        ["F", "Some description2", "150.20", "05/21/2020"],
+        ["G", "Some description3", "200", "2,500.89", "15/18/2020"],
     ]
 
     dummy_dir = tmp_path / "dummy"
@@ -74,6 +74,7 @@ def test_load_details_from_expense_stmt(tmp_path):
             "Payment Details": ["Some description", "Some description2"],
             "Debit": [100.00, 150.20],
             "Credit": [3300.00, 0.00],
+            "Value date": [],
         }
     )
 

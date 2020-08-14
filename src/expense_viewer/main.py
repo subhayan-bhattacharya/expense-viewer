@@ -6,7 +6,7 @@ import logging
 import pandas as pd
 import ruamel.yaml
 import expense_viewer.exceptions as exceptions
-import expense_viewer.expense.monthly_expense as expense
+import expense_viewer.expense.overall_expense as expense
 
 EXPECTED_FORMATS = (".csv",)
 
@@ -132,6 +132,6 @@ def get_expense_report(config_file_path: str, salary_statement_path: str) -> Non
         salary_details = load_details_from_expense_stmt(
             expense_statement=salary_statement
         )
-        return expense.MonthlyExpense(expenses=salary_details, config=config)
+        return expense.OverallExpense(expenses=salary_details, config=config)
     except exceptions.Error as exc:
         print(exc)
