@@ -4,6 +4,7 @@ import typing
 import pathlib
 import logging
 import pandas as pd
+from pprint import pprint
 import ruamel.yaml
 import expense_viewer.exceptions as exceptions
 import expense_viewer.expense.overall_expense as expense
@@ -127,7 +128,6 @@ def get_expense_report(config_file_path: str, salary_statement_path: str) -> Non
     salary_statement = pathlib.Path(salary_statement_path)
     try:
         config = read_yaml_file_contents(config_file)
-        logger.info(config)
         check_format_of_salary_statement(salary_statement_path=salary_statement)
         salary_details = load_details_from_expense_stmt(
             expense_statement=salary_statement
