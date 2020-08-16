@@ -10,6 +10,7 @@ def get_full_condition_string(
 ) -> str:
     """Construct a condition string using the condition dict."""
     identifiers = condition["identifiers"]
+    logical_operator = condition["logical_operator"]
 
     identifier_strs = []
 
@@ -25,7 +26,10 @@ def get_full_condition_string(
             operator = f" {comparison_operator} "
             identifier_strs.append(f"{column_name_str}{operator}{value}")
 
-    return " | ".join(identifier_strs)
+    if logical_operator == "OR":
+        return " | ".join(identifier_strs)
+    elif logical_operator == "AND":
+        return " & ".join(identifier_strs)
 
 
 def get_row_index_for_matching_columns(
