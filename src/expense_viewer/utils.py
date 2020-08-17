@@ -1,6 +1,6 @@
 """File which has the common utility functions inside the project."""
 
-from os import confstr
+import datetime
 import pandas as pd
 from typing import Any, Dict, List
 
@@ -37,8 +37,20 @@ def get_row_index_for_matching_columns(
 ) -> List[int]:
     """Get the row index for columns matching the condition in the dataframe."""
     condition_str = get_full_condition_string(condition)
-    print(f"Got back the condition string as : {condition_str}")
 
     result_dataframe = data[pd.eval(condition_str)]
 
     return list(result_dataframe.index.values)
+
+
+def get_expense_month(expense: pd.DataFrame) -> str:
+    """Get the expense month from the data."""
+    expense_copy = expense.copy()
+
+    months = expense_copy["Value date"].dt.month
+
+    most_frequent_month_int = months.value_counts().idxmax()
+
+    # Convert the month number(1/2) into a month string(January/February etc)
+    return datetime.date(1900, most_frequent_month_int, 1).strftime("%B")
+
