@@ -21,3 +21,8 @@ class MonthlyExpense(abs_expense.Expense):
 
     def show_expense_details(self):
         pass
+
+    def show_total_expense_sum(self) -> float:
+        """Find the sum total of all expenses in the month."""
+        expense = sum(self.expense["Debit"]) - sum(self.expense["Credit"])
+        return expense
