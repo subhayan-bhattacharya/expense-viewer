@@ -27,29 +27,22 @@ class OverallExpense(abs_expense.Expense):
         expense_categories = self.config["expense_categories"]
 
         # Read index numbers of salary credited columns
-        indexes = utils.get_row_index_for_matching_columns(
+        salary_row_indexes = utils.get_row_index_for_matching_columns(
             self.config["salary"], self.expenses
         )
 
         # Divide the expense data into months as per the indexes and assign labels
+        # The data before the first salary row is not taken into account
         # Also add the monthly expense objects into the list of child expenses
-        start = 0
-        for index in indexes:
-            data = self.expenses[start:index]
-
-            month = utils.get_expense_month(data)
-
-            self.child_expenses.append(
-                monthly_expense.MonthlyExpense(
-                    expense=data, config=expense_categories, label=month
-                )
+        for index, value in enumerate(salary_row_indexes):
+            data = (
+                self.expenses[value + 1 :]
+                if len(salary_row_indexes) - 1 == index
+                else self.expenses[value + 1 : salary_row_indexes[index + 1]]
             )
 
-            start = index + 1
-        # Add any remaining data after the last salary row in csv
-        data = self.expenses[start:]
-        if len(data) > 1:
             month = utils.get_expense_month(data)
+
             self.child_expenses.append(
                 monthly_expense.MonthlyExpense(
                     expense=data, config=expense_categories, label=month
