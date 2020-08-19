@@ -7,7 +7,6 @@ from expense_viewer import expense
 import expense_viewer.expense.abs_expense as abs_expense
 import expense_viewer.expense.monthly_expense as monthly_expense
 import expense_viewer.utils as utils
-import expense_viewer
 
 
 class OverallExpense(abs_expense.Expense):
@@ -56,25 +55,23 @@ class OverallExpense(abs_expense.Expense):
 
     def show_expense_details(self) -> None:
         """Show expense details for each of the child months."""
-        expense_details = defaultdict(list)
+        labels = []
+        expenses = []
+        savings = []
 
         for child in self.child_expenses:
-            expenses_in_month = child.show_total_expense_sum()
-            savings_in_month = 3373 - expenses_in_month
-            print(
-                f"Month : {child.label}, Expense: {expenses_in_month} and Savings: {savings_in_month}"
-            )
-            expense_details["Expenses"].append(expenses_in_month)
-            expense_details["Month"].append(child.label)
-            expense_details["Savings"].append(savings_in_month)
+            expenses_in_month = round(child.show_total_expense_sum(), 2)
+            savings_in_month = round(3373 - expenses_in_month, 2)
 
-        pd_dataframe = pd.DataFrame(expense_details)
-        pd_dataframe.plot.bar(
-            x="Month", y="Expenses", color=expense_viewer.expense_plot_colors
-        )
+            expenses.append(expenses_in_month)
+            savings.append(savings_in_month)
+            labels.append(child.label)
 
-        pd_dataframe.plot.bar(
-            x="Month", y="Savings", color=expense_viewer.expense_plot_colors
+        utils.display_bar_charts(
+            labels=labels,
+            axes_labels=["Months", "EUR"],
+            expenses=expenses,
+            savings=savings,
         )
 
     def show_total_expense_sum(self) -> None:
