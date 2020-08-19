@@ -19,7 +19,6 @@ class OverallExpense(abs_expense.Expense):
         self.config = config
         self.label = label
         self.child_expenses = []
-        self.add_child_expenses()  # Creates a child expense for every month
 
     def add_child_expenses(self):
         """Adds the child expenses for its expense category."""
