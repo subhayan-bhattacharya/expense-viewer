@@ -1,6 +1,7 @@
 """Test suite for utils module in the application."""
 import pytest
 import pandas as pd
+from datetime import datetime
 import expense_viewer.utils as utils
 
 
@@ -95,3 +96,40 @@ def test_get_row_index_for_matching_columns(condition_str, expected_value, mocke
         utils.get_row_index_for_matching_columns(condition=dict(), data=df)
         == expected_value
     )
+
+
+@pytest.mark.parametrize(
+    ("data, expected_month"),
+    [
+        (
+            pd.DataFrame(
+                {
+                    "Value date": [
+                        datetime.strptime("05/14/20", "%m/%d/%y"),
+                        datetime.strptime("05/12/20", "%m/%d/%y"),
+                        datetime.strptime("04/11/20", "%m/%d/%y"),
+                        datetime.strptime("03/10/20", "%m/%d/%y"),
+                    ]
+                }
+            ),
+            "May",
+        ),
+        (
+            pd.DataFrame(
+                {
+                    "Value date": [
+                        datetime.strptime("06/14/20", "%m/%d/%y"),
+                        datetime.strptime("06/12/20", "%m/%d/%y"),
+                        datetime.strptime("04/11/20", "%m/%d/%y"),
+                        datetime.strptime("03/10/20", "%m/%d/%y"),
+                    ]
+                }
+            ),
+            "June",
+        ),
+    ],
+)
+def test_get_expense_month(data, expected_month):
+    """Test the get_expense_month function inside the utils module."""
+    assert utils.get_expense_month(data) == expected_month
+
