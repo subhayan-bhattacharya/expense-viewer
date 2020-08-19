@@ -1,7 +1,6 @@
 """Contains the code for displaying the expenses of a single month."""
 import pandas as pd
-from collections import defaultdict
-from typing import Dict, Any
+from typing import Dict, Any, List
 from expense_viewer import expense
 
 import expense_viewer.expense.abs_expense as abs_expense
@@ -47,10 +46,9 @@ class OverallExpense(abs_expense.Expense):
                 )
             )
 
-    def show_child_expense_labels(self):
+    def show_child_expense_labels(self) -> List[str]:
         """Just prints the labels of child expenses if any."""
-        for child in self.child_expenses:
-            print(child.label)
+        return [child.label for child in self.child_expenses]
 
     def show_expense_details(self) -> None:
         """Show expense details for each of the child months."""

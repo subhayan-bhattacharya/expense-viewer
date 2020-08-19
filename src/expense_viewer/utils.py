@@ -79,10 +79,12 @@ def display_bar_charts(
                 va="bottom",
             )
 
+    x_loc = x
+
     for data in data_to_plot:
-        rects = ax.bar(x, data_to_plot[data], width, label=data)
+        rects = ax.bar(x_loc, data_to_plot[data], width, label=data)
         autolabel(rects)
-        x = [y + width for y in x]
+        x_loc = [y + width for y in x_loc]
 
     ax.set_ylabel(axes_labels[1])
     ax.set_xlabel(axes_labels[0])
@@ -90,5 +92,6 @@ def display_bar_charts(
     ax.set_xticklabels(labels)
     ax.legend()
 
+    plt.ylim(0, 3000)
     plt.show()
 
