@@ -87,14 +87,14 @@ class TestOverallExpense:
         """Just assert that the object of class is non empty."""
         assert self.obj is not None
         assert self.obj.config == self.config
-        assert self.obj.child_expenses == []
+        assert self.obj.child_expenses == {}
         assert self.obj.label == "Overall"
 
     def test_add_child_expenses_method(self):
         """Test the functionality of add_child_expenses method of class."""
         self.obj.add_child_expenses()
-        assert len(self.obj.child_expenses) == 1
-        assert self.obj.child_expenses[0].expense.equals(self.child_data)
+        assert len(list(self.obj.child_expenses.keys())) == 1
+        assert self.obj.child_expenses["May"].expense.equals(self.child_data)
 
     def test_show_child_expense_labels(self):
         """Test the function show_child_expense_labels."""

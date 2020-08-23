@@ -14,7 +14,12 @@ class MonthlyExpense(abs_expense.Expense):
         self.expense = expense
         self.label = label
         self.config = config
-        self.child_expenses = []
+        self.child_expenses = {}
+
+    def add_child_expenses(self):
+        """Add the child expenses for the month's items."""
+        for category in self.config:
+            print(category["name"])
 
     def show_child_expense_labels(self):
         pass

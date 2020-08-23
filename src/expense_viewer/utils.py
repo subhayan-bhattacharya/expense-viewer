@@ -18,7 +18,7 @@ def get_full_condition_string(
     identifier_strs = []
 
     for identifier in identifiers:
-        column_name_str = f"{'data'}[\"{identifier['column']}\"]"
+        column_name_str = f"{dataframe_prefix}[\"{identifier['column']}\"]"
 
         value = identifier["value"]
 

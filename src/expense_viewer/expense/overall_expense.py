@@ -16,7 +16,7 @@ class OverallExpense(abs_expense.Expense):
         self.expenses = expenses
         self.config = config
         self.label = label
-        self.child_expenses = []
+        self.child_expenses = {}
 
     def add_child_expenses(self):
         """Adds the child expenses for its expense category."""
@@ -39,15 +39,13 @@ class OverallExpense(abs_expense.Expense):
 
             month = utils.get_expense_month(data)
 
-            self.child_expenses.append(
-                monthly_expense.MonthlyExpense(
-                    expense=data, config=expense_categories, label=month
-                )
+            self.child_expenses[month] = monthly_expense.MonthlyExpense(
+                expense=data, config=expense_categories, label=month
             )
 
     def show_child_expense_labels(self) -> List[str]:
         """Just prints the labels of child expenses if any."""
-        return [child.label for child in self.child_expenses]
+        return list(self.child_expenses.keys())
 
     def show_expense_details(self) -> None:
         """Show expense details for each of the child months."""
@@ -55,7 +53,8 @@ class OverallExpense(abs_expense.Expense):
         expenses = []
         savings = []
 
-        for child in self.child_expenses:
+        for label in self.child_expenses:
+            child = self.child_expenses[label]
             expenses_in_month = round(child.show_total_expense_sum(), 2)
             savings_in_month = round(3373 - expenses_in_month, 2)
 
