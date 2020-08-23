@@ -43,10 +43,6 @@ class OverallExpense(abs_expense.Expense):
                 expense=data, config=expense_categories, label=month
             )
 
-    def show_child_expense_labels(self) -> List[str]:
-        """Just prints the labels of child expenses if any."""
-        return list(self.child_expenses.keys())
-
     def show_expense_details(self) -> None:
         """Show expense details for each of the child months."""
         labels = []

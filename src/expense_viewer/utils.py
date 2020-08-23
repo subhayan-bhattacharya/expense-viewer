@@ -27,7 +27,11 @@ def get_full_condition_string(
             identifier_strs.append(f'{column_name_str}.str.contains("{value}")')
         else:
             operator = f" {comparison_operator} "
-            identifier_strs.append(f"{column_name_str}{operator}{value}")
+            identifier_strs.append(
+                f"{column_name_str}{operator}{value}"
+            ) if not isinstance(value, str) else identifier_strs.append(
+                f"{column_name_str}{operator}'{value}'"
+            )
 
     if logical_operator == "OR":
         return " | ".join(identifier_strs)
