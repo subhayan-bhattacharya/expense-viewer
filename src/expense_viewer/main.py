@@ -132,7 +132,7 @@ def get_expense_report(config_file_path: str, salary_statement_path: str) -> Non
         salary_details = load_details_from_expense_stmt(
             expense_statement=salary_statement
         )
-        expense_obj = expense.OverallExpense(expenses=salary_details, config=config)
+        expense_obj = expense.OverallExpense(expense=salary_details, config=config)
         expense_obj.add_child_expenses()
         return expense_obj
     except exceptions.Error as exc:

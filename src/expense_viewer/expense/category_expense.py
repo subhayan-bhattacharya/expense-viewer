@@ -3,28 +3,31 @@
 from typing import Dict, Any
 import pandas as pd
 
-import expense_viewer.expense.abs_expense as abs_expense
+import expense_viewer.expense.expense as expense
 from expense_viewer import utils as utils
 
 
-class CategoryExpense(abs_expense.Expense):
+class CategoryExpense(expense.Expense):
     """A class for a single category of expense."""
 
-    def __init__(
-        self, expense: pd.DataFrame, config: Dict[str, Any], label: str
-    ) -> None:
-        self.expense = expense
-        self.label = label
-        self.config = config
-        self.child_expenses = {}
-
     def add_child_expenses(self):
-        pass
+        """Add the child expenses for each subcategory."""
+        data = self.expense
+        for identifier in self.config["identifiers"]:
+            condition_str = utils.get_condition_str_for_single_identifier(
+                identifier=identifier
+            )
+            expense_data_for_identifier = data[pd.eval(condition_str)]
 
-    def show_expense_details(self):
+            if not expense_data_for_identifier.empty:
+                self.child_expenses[identifier["label"]] = expense.Expense(
+                    expense=expense_data_for_identifier,
+                    config=identifier,
+                    label=identifier["label"],
+                )
+                # Since the child expense for this is the base class object which does not
+                # Have an add_child_expense method, further calls to that method are not done
+
+    def show_expense_summary_graph(self):
         """Show the expense details for a category."""
-        pass
-
-    def show_total_expense_sum(self):
-        """Add the total expenses incurred and give it back."""
         pass

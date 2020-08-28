@@ -2,21 +2,18 @@
 import pandas as pd
 from typing import Dict, Any, List
 
-import expense_viewer.expense.abs_expense as abs_expense
+import expense_viewer.expense.expense as expense
 import expense_viewer.expense.monthly_expense as monthly_expense
 import expense_viewer.utils as utils
 
 
-class OverallExpense(abs_expense.Expense):
+class OverallExpense(expense.Expense):
     """Class for calculating and displaying overall expenses incurred for a list of months."""
 
     def __init__(
-        self, expenses: pd.DataFrame, config: Dict[str, Any], label: str = "Overall"
+        self, expense: pd.DataFrame, config: Dict[str, Any], label: str = "Overall"
     ) -> None:
-        self.expenses = expenses
-        self.config = config
-        self.label = label
-        self.child_expenses = {}
+        super().__init__(expense=expense, config=config, label=label)
 
     def add_child_expenses(self):
         """Adds the child expenses for its expense category."""
@@ -24,7 +21,7 @@ class OverallExpense(abs_expense.Expense):
 
         # Read index numbers of salary credited columns
         salary_row_indexes = utils.get_row_index_for_matching_columns(
-            self.config["salary"], self.expenses
+            self.config["salary"], self.expense
         )
 
         # Divide the expense data into months as per the indexes and assign labels
@@ -32,9 +29,9 @@ class OverallExpense(abs_expense.Expense):
         # Also add the monthly expense objects into the list of child expenses
         for index, value in enumerate(salary_row_indexes):
             data = (
-                self.expenses[value + 1 :]
+                self.expense[value + 1 :]
                 if len(salary_row_indexes) - 1 == index
-                else self.expenses[value + 1 : salary_row_indexes[index + 1]]
+                else self.expense[value + 1 : salary_row_indexes[index + 1]]
             )
 
             month = utils.get_expense_month(data)
@@ -42,8 +39,10 @@ class OverallExpense(abs_expense.Expense):
             self.child_expenses[month] = monthly_expense.MonthlyExpense(
                 expense=data, config=expense_categories, label=month
             )
+            # Delegate to the child object to add its own expenses
+            self.child_expenses[month].add_child_expenses()
 
-    def show_expense_details(self) -> None:
+    def show_expense_summary_graph(self) -> None:
         """Show expense details for each of the child months."""
         labels = []
         expenses = []
@@ -51,7 +50,7 @@ class OverallExpense(abs_expense.Expense):
 
         for label in self.child_expenses:
             child = self.child_expenses[label]
-            expenses_in_month = round(child.show_total_expense_sum(), 2)
+            expenses_in_month = round(child.get_total_expense_sum(), 2)
             savings_in_month = round(3373 - expenses_in_month, 2)
 
             expenses.append(expenses_in_month)
@@ -65,7 +64,7 @@ class OverallExpense(abs_expense.Expense):
             savings=savings,
         )
 
-    def show_total_expense_sum(self) -> None:
+    def get_total_expense_sum(self) -> None:
         """Show sum total of all the expenses."""
         raise NotImplementedError(
             "This method does not make sense of the Overall expense.."

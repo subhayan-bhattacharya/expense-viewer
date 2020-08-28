@@ -18,25 +18,35 @@ def get_full_condition_string(
     identifier_strs = []
 
     for identifier in identifiers:
-        column_name_str = f"{dataframe_prefix}[\"{identifier['column']}\"]"
-
-        value = identifier["value"]
-
-        comparison_operator = identifier["comparison_operator"]
-        if comparison_operator == "contains":
-            identifier_strs.append(f'{column_name_str}.str.contains("{value}")')
-        else:
-            operator = f" {comparison_operator} "
-            identifier_strs.append(
-                f"{column_name_str}{operator}{value}"
-            ) if not isinstance(value, str) else identifier_strs.append(
-                f"{column_name_str}{operator}'{value}'"
-            )
+        identifier_strs.append(
+            get_condition_str_for_single_identifier(identifier=identifier)
+        )
 
     if logical_operator == "OR":
         return " | ".join(identifier_strs)
     elif logical_operator == "AND":
         return " & ".join(identifier_strs)
+
+
+def get_condition_str_for_single_identifier(
+    identifier: Dict[str, Any], dataframe_prefix: str = "data"
+) -> str:
+    """Get the condition str for a single identifier."""
+    column_name_str = f"{dataframe_prefix}[\"{identifier['column']}\"]"
+
+    value = identifier["value"]
+
+    comparison_operator = identifier["comparison_operator"]
+
+    if comparison_operator == "contains":
+        return f'{column_name_str}.str.contains("{value}")'
+    else:
+        operator = f" {comparison_operator} "
+        return (
+            f"{column_name_str}{operator}{value}"
+            if not isinstance(value, str)
+            else f"{column_name_str}{operator}'{value}'"
+        )
 
 
 def get_row_index_for_matching_columns(

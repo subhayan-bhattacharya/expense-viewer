@@ -71,7 +71,7 @@ def init_overall_expense(
 ):
     """Initialize the OverallExpense class."""
     obj = overall_expense.OverallExpense(
-        expenses=get_dummy_pandas_data, config=get_dummy_config_data
+        expense=get_dummy_pandas_data, config=get_dummy_config_data
     )
     request.cls.obj = obj
     request.cls.expenses = get_dummy_pandas_data
@@ -96,24 +96,24 @@ class TestOverallExpense:
         assert len(list(self.obj.child_expenses.keys())) == 1
         assert self.obj.child_expenses["May"].expense.equals(self.child_data)
 
-    def test_show_child_expense_labels(self):
-        """Test the function show_child_expense_labels."""
-        assert self.obj.show_child_expense_labels() == ["May"]
+    def test_get_child_expense_labels(self):
+        """Test the function get_child_expense_labels."""
+        assert self.obj.get_child_expense_labels() == ["May"]
 
-    def test_show_total_expense_sum(self):
-        """Test the function show_total_expense_sum."""
+    def test_get_total_expense_sum(self):
+        """Test the function get_total_expense_sum."""
         with pytest.raises(NotImplementedError):
-            self.obj.show_total_expense_sum()
+            self.obj.get_total_expense_sum()
 
-    def test_show_expense_details(self, mocker):
-        """Test the function show_expense_details."""
+    def test_show_expense_summary_graph(self, mocker):
+        """Test the function show_expense_summary_graph."""
         mocked_display_bar_charts = mocker.patch(
             "expense_viewer.utils.display_bar_charts"
         )
         labels = ["May"]
         expenses = [-409.9]
         savings = [3782.9]
-        self.obj.show_expense_details()
+        self.obj.show_expense_summary_graph()
         mocked_display_bar_charts.assert_called_with(
             labels=labels,
             axes_labels=["Months", "EUR"],

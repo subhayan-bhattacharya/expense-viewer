@@ -1,23 +1,21 @@
 """File for monthly expenses."""
-from typing import Dict, Any
+from typing import Dict, Any, Set
 import pandas as pd
 
-import expense_viewer.expense.abs_expense as abs_expense
+import expense_viewer.expense.expense as expense
 import expense_viewer.expense.category_expense as category_expense
 from expense_viewer import utils as utils
-from expense_viewer.expense.category_expense import CategoryExpense
 
 
-class MonthlyExpense(abs_expense.Expense):
+class MonthlyExpense(expense.Expense):
     """Monthly expense category for application."""
 
     def __init__(
-        self, expense: pd.DataFrame, config: Dict[str, Any], label: str
+        self, expense: pd.DataFrame, config: Dict[str, Any], label: str = "Overall"
     ) -> None:
-        self.expense = expense
-        self.label = label
-        self.config = config
-        self.child_expenses = {}
+        super().__init__(expense=expense, config=config, label=label)
+        self._all_found_category_indices: Set[int] = set()
+        self._category_indices_map: Dict[str, Set[int]] = dict()
 
     def add_child_expenses(self):
         """Add the child expenses for the month's items and then delegate."""
@@ -36,12 +34,25 @@ class MonthlyExpense(abs_expense.Expense):
                     config=category,
                     label=category["name"],
                 )
-                # self.child_expenses[category["name"]].add_child_expenses()
+                self.child_expenses[category["name"]].add_child_expenses()
+            else:
+                print(
+                    f"No child expenses found for category {category['name']} for the month {self.label}"
+                )
 
-    def show_expense_details(self):
-        pass
+    def show_expense_summary_graph(self):
+        """Show the details of the object's expenses as a bar chart."""
+        labels = []
+        expenses = []
 
-    def show_total_expense_sum(self) -> float:
-        """Find the sum total of all expenses in the month."""
-        expense = sum(self.expense["Debit"]) - sum(self.expense["Credit"])
-        return expense
+        for category_name in self.child_expenses:
+            child = self.child_expenses[category_name]
+            expenses_in_category = round(child.get_total_expense_sum(), 2)
+
+            expenses.append(expenses_in_category)
+            labels.append(child.label)
+
+        utils.display_bar_charts(
+            labels=labels, axes_labels=["Category", "EUR"], expenses=expenses,
+        )
+
