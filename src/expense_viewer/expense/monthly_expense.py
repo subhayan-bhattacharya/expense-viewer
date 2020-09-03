@@ -27,6 +27,14 @@ class MonthlyExpense(expense.Expense):
 
             if not expense_data_for_category.empty:
                 # Add the child expense only when the data is non empty
+                # First check if the indices of the child are already in the found indices for some other category
+                # If yes then don't continue further as it is ambiguous
+                expense_data_indices = set(expense_data_for_category.index)
+                self._expense_data_indices_not_already_found(
+                    indices=expense_data_indices
+                )
+                self._category_indices_map[category] = expense_data_indices
+
                 self.child_expenses[
                     category["name"]
                 ] = category_expense.CategoryExpense(
@@ -38,6 +46,16 @@ class MonthlyExpense(expense.Expense):
             else:
                 print(
                     f"No child expenses found for category {category['name']} for the month {self.label}"
+                )
+
+    def _expense_data_indices_not_already_found(self, indices: Set[int]) -> None:
+        """Check if the indices are already in the set of indices for some other category."""
+        for category in self._category_indices_map:
+            indices_for_category = self._category_indices_map[category]
+            common_indices = indices.intersection(indices_for_category)
+            if common_indices:
+                raise ValueError(
+                    f"There are {common_indices} common indices with category {category}... filter condition needs to be checked."
                 )
 
     def show_expense_summary_graph(self):
