@@ -1,6 +1,7 @@
 """File for monthly expenses."""
 from typing import Dict, Any, Set
 import pandas as pd
+from expense_viewer import exceptions
 
 import expense_viewer.expense.expense as expense
 import expense_viewer.expense.category_expense as category_expense
@@ -28,12 +29,13 @@ class MonthlyExpense(expense.Expense):
             if not expense_data_for_category.empty:
                 # Add the child expense only when the data is non empty
                 # First check if the indices of the child are already in the found indices for some other category
-                # If yes then don't continue further as it is ambiguous
+                # If yes then don't continue further and raise an error as it is ambiguous
                 expense_data_indices = set(expense_data_for_category.index)
                 self._expense_data_indices_not_already_found(
                     indices=expense_data_indices
                 )
                 self._category_indices_map[category] = expense_data_indices
+                self._all_found_category_indices.update(expense_data_indices)
 
                 self.child_expenses[
                     category["name"]
@@ -54,7 +56,7 @@ class MonthlyExpense(expense.Expense):
             indices_for_category = self._category_indices_map[category]
             common_indices = indices.intersection(indices_for_category)
             if common_indices:
-                raise ValueError(
+                raise exceptions.ExpenseDataAlreadyInOtherExpenseError(
                     f"There are {common_indices} common indices with category {category}... filter condition needs to be checked."
                 )
 

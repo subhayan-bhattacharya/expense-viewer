@@ -20,3 +20,7 @@ class WrongFormatError(Error):
 
 class CouldNotLoadSalaryStmtError(Error):
     """When a salary statement could not be loaded."""
+
+
+class ExpenseDataAlreadyInOtherExpenseError(Error):
+    """When a salary statement could not be loaded."""
