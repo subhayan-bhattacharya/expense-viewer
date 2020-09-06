@@ -34,7 +34,7 @@ class MonthlyExpense(expense.Expense):
                 self._expense_data_indices_not_already_found(
                     indices=expense_data_indices
                 )
-                self._category_indices_map[category] = expense_data_indices
+                self._category_indices_map[category["name"]] = expense_data_indices
                 self._all_found_category_indices.update(expense_data_indices)
 
                 self.child_expenses[
