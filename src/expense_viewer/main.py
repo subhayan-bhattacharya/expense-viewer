@@ -14,6 +14,13 @@ EXPECTED_FORMATS = (".csv",)
 logger = logging.getLogger(__name__)
 
 
+def replace_comma_if_string(value: typing.Union[str, float]):
+    """Check if the value is a string then do replacement of comma."""
+    if isinstance(value, str):
+        return value.replace(",", "")
+    return value
+
+
 def read_yaml_file_contents(yaml_file_path: pathlib.Path) -> typing.Dict:
     """
     Read a yaml file and return the contents.
@@ -97,15 +104,15 @@ def load_details_from_expense_stmt(
             parse_dates=["Value date"],
         )
         transactions.drop(transactions.tail(1).index, inplace=True)
-        transactions["Credit"].fillna("0", inplace=True)
+        transactions["Credit"] = transactions["Credit"].apply(replace_comma_if_string)
+        transactions["Debit"] = transactions["Debit"].apply(replace_comma_if_string)
+        transactions["Credit"] = transactions["Credit"].astype("float64")
+        transactions["Debit"] = transactions["Debit"].astype("float64")
+        transactions["Credit"].fillna(0, inplace=True)
         transactions["Debit"].fillna(0, inplace=True)
-        transactions["Credit"] = transactions["Credit"].apply(
-            lambda value: value.replace(",", "")
-        )
         transactions["Debit"] = transactions["Debit"].apply(
             lambda value: value if value >= 0 else value * -1
         )
-        transactions["Credit"] = transactions["Credit"].astype("float64")
         return transactions
     except Exception as exc:
         message = f"Could not load the details from {expense_statement}"

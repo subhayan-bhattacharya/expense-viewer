@@ -106,6 +106,5 @@ def display_bar_charts(
     ax.set_xticklabels(labels)
     ax.legend()
 
-    plt.ylim(0, 3000)
+    plt.ylim(0, 4000)
     plt.show()
-
