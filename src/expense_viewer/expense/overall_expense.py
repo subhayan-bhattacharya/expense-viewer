@@ -25,6 +25,7 @@ class OverallExpense(expense.Expense):
             self.config["salary"], self.expense
         )
 
+        print(salary_row_indexes)
         # Divide the expense data into months as per the indexes and assign labels
         # The data before the first salary row is not taken into account
         # Also add the monthly expense objects into the list of child expenses
@@ -42,9 +43,11 @@ class OverallExpense(expense.Expense):
 
             if month in self.child_expenses.keys():
                 warnings.warn(
-                    f"{month} has already been added to the child expenses...ignoring the data"
+                    f"{month} has already been added to the child expenses..."
+                    "adding next month's label to the data"
                 )
-                continue
+                month = utils.get_next_month_label(month)
+                warnings.warn(f"The next month {month} has been chosen for the data")
 
             self.child_expenses[month] = monthly_expense.MonthlyExpense(
                 expense=data, config=expense_categories, label=month

@@ -1,5 +1,6 @@
 """File which has the common utility functions inside the project."""
 
+import calendar
 import datetime
 import matplotlib
 import matplotlib.pyplot as plt
@@ -70,6 +71,18 @@ def get_expense_month(expense: pd.DataFrame) -> str:
 
     # Convert the month number(1/2) into a month string(January/February etc)
     return datetime.date(1900, most_frequent_month_int, 1).strftime("%B")
+
+
+def get_next_month_label(month: str) -> str:
+    """Get the next month of the month supplied as input."""
+    datetime_object = datetime.datetime.strptime(month, "%B")
+    month_num = datetime_object.month
+
+    current_time = datetime.datetime.now()
+    current_year = current_time.year
+
+    next_month_num = calendar.nextmonth(current_year, month_num)[1]
+    return datetime.date(1900, next_month_num, 1).strftime("%B")
 
 
 def display_bar_charts(

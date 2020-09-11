@@ -30,4 +30,7 @@ class CategoryExpense(expense.Expense):
 
     def show_expense_summary_graph(self):
         """Show the expense details for a category."""
-        pass
+        if not self.child_expenses:
+            super().show_expense_summary_graph()
+        else:
+            print(f"Shoould find some child expenses : {self.child_expenses}")

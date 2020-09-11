@@ -1,22 +1,58 @@
 salary:
   logical_operator: AND
   identifiers:
-    - value: ""
-      column: ""
-    - value: ""
-      column: ""
+    - value: 3373.00
+      comparison_operator: ">="
+      column: "Credit"
+    - value: "Salary"
+      comparison_operator: "contains"
+      column: "Transaction Type"
 expense_categories:
   - name: House related
-    logical_operation: OR
+    logical_operator: OR
     identifiers:
-      - value: ""
-        column: ""
-      - value: ""
-        column: ""
+      - value: 614.00
+        comparison_operator: ">="
+        label: "Rent"
+        column: "Debit"
+      - value: "Marius"
+        comparison_operator: "contains"
+        label: "Everything else Marius"
+        column: "Payment Details"
   - name: Food
-    logical_operation: AND
+    logical_operator: OR
     identifiers:
-      - value: ""
-        column: ""
-      - value: ""
-        column: ""
+      - value: "Diska"
+        comparison_operator: "contains"
+        label: "Diska"
+        column: "Payment Details"
+      - value: "Edeka"
+        comparison_operator: "contains"
+        label: "Edeka"
+        column: "Payment Details"
+      - value: "Tukwila"
+        comparison_operator: "contains"
+        label: "Tukwila"
+        column: "Payment Details"
+  - name: Cash
+    logical_operator: OR
+    identifiers:
+      - value: "Cash withdrawl"
+        comparison_operator: "=="
+        column: "Transaction Type"
+        label: "Withdraw cash"
+  - name: Retail
+    logical_operator: OR
+    identifiers:
+      - value: "AMZN"
+        comparison_operator: "contains"
+        label: "Amazon"
+        column: "Payment Details"
+      - value: "DVB"
+        comparison_operator: "contains"
+        label: "Tickets"
+        column: "Payment Details"
+      - value: "HandyTicket"
+        comparison_operator: "contains"
+        label: "Tickets"
+        column: "Payment Details"
