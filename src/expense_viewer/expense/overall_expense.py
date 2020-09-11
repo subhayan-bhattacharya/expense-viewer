@@ -1,5 +1,6 @@
 """Contains the code for displaying the expenses of a single month."""
 import pandas as pd
+import warnings
 from typing import Dict, Any, List
 
 import expense_viewer.expense.expense as expense
@@ -24,19 +25,26 @@ class OverallExpense(expense.Expense):
             self.config["salary"], self.expense
         )
 
-        print(salary_row_indexes)
-
         # Divide the expense data into months as per the indexes and assign labels
         # The data before the first salary row is not taken into account
         # Also add the monthly expense objects into the list of child expenses
-        for index, value in enumerate(salary_row_indexes):
-            data = (
-                self.expense[value + 1 :]
-                if len(salary_row_indexes) - 1 == index
-                else self.expense[value + 1 : salary_row_indexes[index + 1]]
-            )
+        for index in range(len(salary_row_indexes)):
+            if index < len(salary_row_indexes) - 1:
+                start_index = salary_row_indexes[index]
+
+                end_index = salary_row_indexes[index + 1]
+
+                data = self.expense[start_index + 1 : end_index]
+            else:
+                data = self.expense[salary_row_indexes[index] + 1 :]
 
             month = utils.get_expense_month(data)
+
+            if month in self.child_expenses.keys():
+                warnings.warn(
+                    f"{month} has already been added to the child expenses...ignoring the data"
+                )
+                continue
 
             self.child_expenses[month] = monthly_expense.MonthlyExpense(
                 expense=data, config=expense_categories, label=month
