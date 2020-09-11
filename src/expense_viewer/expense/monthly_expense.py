@@ -49,6 +49,13 @@ class MonthlyExpense(expense.Expense):
                 print(
                     f"No child expenses found for category {category['name']} for the month {self.label}"
                 )
+        self.child_expenses["Miscellaneous"] = category_expense.CategoryExpense(
+            expense=self.expense[
+                ~self.expense.index.isin(list(self._all_found_category_indices))
+            ],
+            config=dict(),
+            label="Miscellaneous",
+        )
 
     def _expense_data_indices_not_already_found(self, indices: Set[int]) -> None:
         """Check if the indices are already in the set of indices for some other category."""
