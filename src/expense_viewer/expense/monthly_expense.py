@@ -69,17 +69,5 @@ class MonthlyExpense(expense.Expense):
 
     def show_expense_summary_graph(self):
         """Show the details of the object's expenses as a bar chart."""
-        labels = []
-        expenses = []
-
-        for category_name in self.child_expenses:
-            child = self.child_expenses[category_name]
-            expenses_in_category = round(child.get_total_expense_sum(), 2)
-
-            expenses.append(expenses_in_category)
-            labels.append(child.label)
-
-        utils.display_bar_charts(
-            labels=labels, axes_labels=["Category", "EUR"], expenses=expenses,
-        )
+        super().show_expense_summary_graph(axes_labels=["Category", "EUR"])
 

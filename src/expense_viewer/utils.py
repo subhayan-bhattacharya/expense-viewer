@@ -73,15 +73,11 @@ def get_expense_month(expense: pd.DataFrame) -> str:
     return datetime.date(1900, most_frequent_month_int, 1).strftime("%B")
 
 
-def get_next_month_label(month: str) -> str:
+def get_next_month_label(month: str, year=datetime.datetime.now().year) -> str:
     """Get the next month of the month supplied as input."""
     datetime_object = datetime.datetime.strptime(month, "%B")
-    month_num = datetime_object.month
 
-    current_time = datetime.datetime.now()
-    current_year = current_time.year
-
-    next_month_num = calendar.nextmonth(current_year, month_num)[1]
+    next_month_num = calendar.nextmonth(year, datetime_object.month)[1]
     return datetime.date(1900, next_month_num, 1).strftime("%B")
 
 
@@ -120,4 +116,26 @@ def display_bar_charts(
     ax.legend()
 
     plt.ylim(0, 4000)
+    plt.show()
+
+
+def display_pie_charts(labels: List[str], expenses: List[float]) -> None:
+    """Display pie charts using the data provided."""
+
+    def absolute_value(val):
+        """Get absolute value in a pie chart."""
+        a = np.round(val / 100.0 * sum(expenses), 2)
+        return a
+
+    explode = tuple([0] * len(labels))
+    fig1, ax1 = plt.subplots()
+    ax1.pie(
+        expenses,
+        explode=explode,
+        labels=labels,
+        autopct=absolute_value,
+        shadow=True,
+        startangle=90,
+    )
+    ax1.axis("equal")
     plt.show()
