@@ -133,3 +133,12 @@ def test_get_expense_month(data, expected_month):
     """Test the get_expense_month function inside the utils module."""
     assert utils.get_expense_month(data) == expected_month
 
+
+@pytest.mark.parametrize(
+    ("month, next_month"),
+    [("June", "July"), ("January", "February"), ("December", "January")],
+)
+def test_get_next_month_label(month, next_month):
+    """Test for the function get_next_month_label."""
+    assert utils.get_next_month_label(month) == next_month
+

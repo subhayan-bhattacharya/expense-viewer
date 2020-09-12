@@ -28,6 +28,33 @@ def get_dummy_pandas_data():
     return pd.DataFrame(data)
 
 
+@pytest.fixture(scope="function")
+def get_dummy_pandas_data_2():
+    """Modify the above data to get some more edge cases."""
+    data = {
+        "Transaction Type": [
+            "Debit Card Payment",
+            "Credit Transfer",
+            "Debit Card Payment",
+            "Debit Card Payment",
+            "Credit Transfer",
+            "Debit Card Payment",
+        ],
+        "Payment Details": ["desc1", "desc2", "desc3", "desc4", "desc5", "desc6"],
+        "Debit": [100.00, 200.00, 110.10, 150.00, 140.00, 125.00],
+        "Credit": [330, 2500.89, 337.00, 333.00, 2500.89, 320.00],
+        "Value date": [
+            datetime.strptime("05/18/20", "%m/%d/%y"),
+            datetime.strptime("11/18/20", "%m/%d/%y"),
+            datetime.strptime("05/14/20", "%m/%d/%y"),
+            datetime.strptime("05/14/20", "%m/%d/%y"),
+            datetime.strptime("05/16/20", "%m/%d/%y"),
+            datetime.strptime("05/18/20", "%m/%d/%y"),
+        ],
+    }
+    return pd.DataFrame(data)
+
+
 @pytest.fixture(scope="module")
 def get_child_expense_dataframe_data():
     """Return a pandas dataframe which is child expense for month of May."""
@@ -120,3 +147,14 @@ class TestOverallExpense:
             expenses=expenses,
             savings=savings,
         )
+
+
+def test_overall_expense_adding_child_data_edge_cases(
+    get_dummy_pandas_data_2, get_dummy_config_data
+):
+    """Test some edge cases in adding child expenses for overall expense class."""
+    obj = overall_expense.OverallExpense(
+        expense=get_dummy_pandas_data_2, config=get_dummy_config_data
+    )
+    obj.add_child_expenses()
+    assert len(list(obj.child_expenses.keys())) == 2

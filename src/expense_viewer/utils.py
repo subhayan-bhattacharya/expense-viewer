@@ -73,11 +73,13 @@ def get_expense_month(expense: pd.DataFrame) -> str:
     return datetime.date(1900, most_frequent_month_int, 1).strftime("%B")
 
 
-def get_next_month_label(month: str, year=datetime.datetime.now().year) -> str:
+def get_next_month_label(month: str) -> str:
     """Get the next month of the month supplied as input."""
     datetime_object = datetime.datetime.strptime(month, "%B")
 
-    next_month_num = calendar.nextmonth(year, datetime_object.month)[1]
+    next_month_num = calendar.nextmonth(
+        datetime.datetime.now().year, datetime_object.month
+    )[1]
     return datetime.date(1900, next_month_num, 1).strftime("%B")
 
 
