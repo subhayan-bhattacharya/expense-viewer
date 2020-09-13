@@ -31,17 +31,20 @@ class OverallExpense(expense.Expense):
         # Also add the monthly expense objects into the list of child expenses
         for index in range(len(salary_row_indexes)):
             if index < len(salary_row_indexes) - 1:
+                # If the loop has not the last index
                 start_index = salary_row_indexes[index]
 
                 end_index = salary_row_indexes[index + 1]
 
                 data = self.expense[start_index + 1 : end_index]
             else:
+                # Take all the expenses from the last salary row column and beyond
                 data = self.expense[salary_row_indexes[index] + 1 :]
 
             month = utils.get_expense_month(data)
 
             if month in self.child_expenses.keys():
+                # Check if the month is already added then select the next month
                 warnings.warn(
                     f"{month} has already been added to the child expenses..."
                     "adding next month's label to the data"

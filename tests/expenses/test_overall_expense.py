@@ -14,29 +14,6 @@ def get_dummy_pandas_data():
             "Credit Transfer",
             "Debit Card Payment",
             "Debit Card Payment",
-        ],
-        "Payment Details": ["Some desc1", "Some desc2", "Some desc3", "Some desc4"],
-        "Debit": [100.00, 200.00, 110.10, 150.00],
-        "Credit": [330, 2500.89, 337.00, 333.00],
-        "Value date": [
-            datetime.strptime("05/18/20", "%m/%d/%y"),
-            datetime.strptime("11/18/20", "%m/%d/%y"),
-            datetime.strptime("05/14/20", "%m/%d/%y"),
-            datetime.strptime("05/14/20", "%m/%d/%y"),
-        ],
-    }
-    return pd.DataFrame(data)
-
-
-@pytest.fixture(scope="function")
-def get_dummy_pandas_data_2():
-    """Modify the above data to get some more edge cases."""
-    data = {
-        "Transaction Type": [
-            "Debit Card Payment",
-            "Credit Transfer",
-            "Debit Card Payment",
-            "Debit Card Payment",
             "Credit Transfer",
             "Debit Card Payment",
         ],
@@ -56,11 +33,11 @@ def get_dummy_pandas_data_2():
 
 
 @pytest.fixture(scope="module")
-def get_child_expense_dataframe_data():
+def get_child_expense_dataframe_data_may():
     """Return a pandas dataframe which is child expense for month of May."""
     data = {
         "Transaction Type": ["Debit Card Payment", "Debit Card Payment"],
-        "Payment Details": ["Some desc3", "Some desc4"],
+        "Payment Details": ["desc3", "desc4"],
         "Debit": [110.1, 150.0],
         "Credit": [337.0, 333.0],
         "Value date": [
@@ -68,6 +45,22 @@ def get_child_expense_dataframe_data():
             datetime.strptime("05/14/20", "%m/%d/%y"),
         ],
         "Indexes": [2, 3],
+    }
+    data_pd = pd.DataFrame(data)
+    data_pd.set_index("Indexes", inplace=True)
+    return data_pd
+
+
+@pytest.fixture(scope="module")
+def get_child_expense_dataframe_data_june():
+    """Return a pandas dataframe which is child expense for month of May."""
+    data = {
+        "Transaction Type": ["Debit Card Payment"],
+        "Payment Details": ["desc6"],
+        "Debit": [125.00],
+        "Credit": [320.00],
+        "Value date": [datetime.strptime("05/18/20", "%m/%d/%y")],
+        "Indexes": [5],
     }
     data_pd = pd.DataFrame(data)
     data_pd.set_index("Indexes", inplace=True)
@@ -93,7 +86,8 @@ def get_dummy_config_data():
 def init_overall_expense(
     get_dummy_pandas_data,
     get_dummy_config_data,
-    get_child_expense_dataframe_data,
+    get_child_expense_dataframe_data_may,
+    get_child_expense_dataframe_data_june,
     request,
 ):
     """Initialize the OverallExpense class."""
@@ -103,7 +97,8 @@ def init_overall_expense(
     request.cls.obj = obj
     request.cls.expenses = get_dummy_pandas_data
     request.cls.config = get_dummy_config_data
-    request.cls.child_data = get_child_expense_dataframe_data
+    request.cls.child_data_may = get_child_expense_dataframe_data_may
+    request.cls.child_data_june = get_child_expense_dataframe_data_june
 
 
 @pytest.mark.usefixtures("init_overall_expense")
@@ -120,12 +115,13 @@ class TestOverallExpense:
     def test_add_child_expenses_method(self):
         """Test the functionality of add_child_expenses method of class."""
         self.obj.add_child_expenses()
-        assert len(list(self.obj.child_expenses.keys())) == 1
-        assert self.obj.child_expenses["May"].expense.equals(self.child_data)
+        assert len(list(self.obj.child_expenses.keys())) == 2
+        assert self.obj.child_expenses["May"].expense.equals(self.child_data_may)
+        assert self.obj.child_expenses["June"].expense.equals(self.child_data_june)
 
     def test_get_child_expense_labels(self):
         """Test the function get_child_expense_labels."""
-        assert self.obj.get_child_expense_labels() == ["May"]
+        assert self.obj.get_child_expense_labels() == ["May", "June"]
 
     def test_get_total_expense_sum(self):
         """Test the function get_total_expense_sum."""
@@ -137,9 +133,9 @@ class TestOverallExpense:
         mocked_display_bar_charts = mocker.patch(
             "expense_viewer.utils.display_bar_charts"
         )
-        labels = ["May"]
-        expenses = [-409.9]
-        savings = [3782.9]
+        labels = ["May", "June"]
+        expenses = [-409.9, -195.00]
+        savings = [3782.9, 3568.00]
         self.obj.show_expense_summary_graph()
         mocked_display_bar_charts.assert_called_with(
             labels=labels,
@@ -148,13 +144,3 @@ class TestOverallExpense:
             savings=savings,
         )
 
-
-def test_overall_expense_adding_child_data_edge_cases(
-    get_dummy_pandas_data_2, get_dummy_config_data
-):
-    """Test some edge cases in adding child expenses for overall expense class."""
-    obj = overall_expense.OverallExpense(
-        expense=get_dummy_pandas_data_2, config=get_dummy_config_data
-    )
-    obj.add_child_expenses()
-    assert len(list(obj.child_expenses.keys())) == 2
