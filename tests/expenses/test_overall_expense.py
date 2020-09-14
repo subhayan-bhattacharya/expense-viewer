@@ -1,4 +1,4 @@
-"""Test suite for the overall_expense..py module."""
+"""Test suite for the overall_expense.py module."""
 import pandas as pd
 from datetime import datetime
 import pytest
