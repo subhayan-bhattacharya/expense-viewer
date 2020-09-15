@@ -37,7 +37,8 @@ def get_dummy_config_data():
                 {
                     'value': 'desc1',
                     'comparison_operator': 'contains',
-                    'column': 'Payment Details'
+                    'column': 'Payment Details',
+                    'label': 'Category1'
                 }
             ]
         },
@@ -48,7 +49,8 @@ def get_dummy_config_data():
                 {
                     'value': 'desc2',
                     'comparison_operator': 'contains',
-                    'column': 'Payment Details'
+                    'column': 'Payment Details',
+                    'label': 'Category2'
                 }
             ]
         }
@@ -62,7 +64,7 @@ def expense_data_for_category_1():
     data = {
         "Transaction Type": ["Debit Card Payment"],
         "Payment Details": ["desc1"],
-        "Debit": [200.00, 110.10],
+        "Debit": [100.00],
         "Credit": [0],
         "Value date": [
             datetime.strptime("05/10/20", "%m/%d/%y"),
@@ -80,7 +82,7 @@ def expense_data_for_category_2():
     data = {
         "Transaction Type": ["Debit Card Payment", "Debit Card Payment"],
         "Payment Details": ["desc2", "desc2"],
-        "Debit": [100.00],
+        "Debit": [200.00, 110.10],
         "Credit": [20.00, 10.00],
         "Value date": [
             datetime.strptime("05/12/20", "%m/%d/%y"),
@@ -91,5 +93,44 @@ def expense_data_for_category_2():
     data_pd = pd.DataFrame(data)
     data_pd.set_index("Indexes", inplace=True)
     return data_pd
+
+
+@pytest.fixture(scope="class")
+def init_monthly_expense(
+    get_dummy_pandas_data,
+    get_dummy_config_data,
+    expense_data_for_category_1,
+    expense_data_for_category_2,
+    request,
+):
+    """Initialize the OverallExpense class."""
+    obj = monthly_expense.MonthlyExpense(
+        expense=get_dummy_pandas_data, config=get_dummy_config_data, label='May'
+    )
+    request.cls.obj = obj
+    request.cls.expenses = get_dummy_pandas_data
+    request.cls.config = get_dummy_config_data
+    request.cls.child_data_category_1 = expense_data_for_category_1
+    request.cls.child_data_category_2 = expense_data_for_category_2
+
+
+@pytest.mark.usefixtures("init_monthly_expense")
+class TestMonthlyExpense:
+    """All the tests for the MonthlyExpense class."""
+
+    def test_object_of_class_is_created(self):
+        """Just assert that the object of class is non empty."""
+        assert self.obj is not None
+        assert self.obj.config == self.config
+        assert self.obj.child_expenses == {}
+        assert self.obj.label == "May"
+
+    def test_add_child_expenses_method(self):
+        """Test the functionality of add_child_expenses method of class."""
+        self.obj.add_child_expenses()
+        # assert len(list(self.obj.child_expenses.keys())) == 2
+        print(self.obj.get_child_expense_labels())
+        # assert self.obj.child_expenses["Category1"].expense.equals(self.child_data_category_1)
+        # assert self.obj.child_expenses["Category2"].expense.equals(self.child_data_category_2)
 
 
