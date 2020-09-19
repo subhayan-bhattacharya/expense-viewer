@@ -1,7 +1,7 @@
 salary:
   logical_operator: AND
   identifiers:
-    - value: 3373.00
+    - value:
       comparison_operator: ">="
       column: "Credit"
     - value: "Salary"
@@ -11,7 +11,7 @@ expense_categories:
   - name: House related
     logical_operator: OR
     identifiers:
-      - value: 614.00
+      - value:
         comparison_operator: ">="
         label: "Rent"
         column: "Debit"
@@ -22,37 +22,61 @@ expense_categories:
   - name: Food
     logical_operator: OR
     identifiers:
-      - value: "Diska"
+      - value:
         comparison_operator: "contains"
         label: "Diska"
         column: "Payment Details"
-      - value: "Edeka"
+      - value:
         comparison_operator: "contains"
         label: "Edeka"
         column: "Payment Details"
-      - value: "Tukwila"
+      - value:
+        comparison_operator: "contains"
+        label: "Aldi"
+        column: "Payment Details"
+      - value:
+        comparison_operator: "contains"
+        label: "Simmel"
+        column: "Payment Details"
+      - value:
         comparison_operator: "contains"
         label: "Tukwila"
+        column: "Payment Details"
+      - value:
+        comparison_operator: "contains"
+        label: "Konsum"
+        column: "Payment Details"
+      - value:
+        comparison_operator: "contains"
+        label: "Rewe"
         column: "Payment Details"
   - name: Cash
     logical_operator: OR
     identifiers:
-      - value: "Cash withdrawl"
+      - value:
         comparison_operator: "=="
         column: "Transaction Type"
         label: "Withdraw cash"
   - name: Retail
     logical_operator: OR
     identifiers:
-      - value: "AMZN"
+      - value:
         comparison_operator: "contains"
         label: "Amazon"
         column: "Payment Details"
-      - value: "DVB"
+      - value:
         comparison_operator: "contains"
         label: "Tickets"
         column: "Payment Details"
-      - value: "HandyTicket"
+      - value:
         comparison_operator: "contains"
         label: "Tickets"
+        column: "Payment Details"
+      - value:
+        comparison_operator: "contains"
+        label: "Electronics"
+        column: "Payment Details"
+      - value:
+        comparison_operator: "contains"
+        label: "Electronics"
         column: "Payment Details"
