@@ -49,13 +49,17 @@ class MonthlyExpense(expense.Expense):
                 print(
                     f"No child expenses found for category {category['name']} for the month {self.label}"
                 )
-        self.child_expenses["Miscellaneous"] = category_expense.CategoryExpense(
-            expense=self.expense[
-                ~self.expense.index.isin(list(self._all_found_category_indices))
-            ],
-            config=dict(),
-            label="Miscellaneous",
-        )
+
+        remaining_expense_without_category = self.expense[
+            ~self.expense.index.isin(list(self._all_found_category_indices))
+        ]
+
+        if not remaining_expense_without_category.empty:
+            self.child_expenses["Miscellaneous"] = category_expense.CategoryExpense(
+                expense=remaining_expense_without_category,
+                config=dict(),
+                label="Miscellaneous",
+            )
 
     def _expense_data_indices_not_already_found(self, indices: Set[int]) -> None:
         """Check if the indices are already in the set of indices for some other category."""
@@ -69,5 +73,5 @@ class MonthlyExpense(expense.Expense):
 
     def show_expense_summary_graph(self):
         """Show the details of the object's expenses as a bar chart."""
-        super().show_expense_summary_graph(axes_labels=["Category", "EUR"])
+        super().show_expense_summary_graph()
 

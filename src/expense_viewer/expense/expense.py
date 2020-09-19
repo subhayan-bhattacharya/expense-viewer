@@ -15,7 +15,7 @@ class Expense:
         self.config = config
         self.child_expenses = {}
 
-    def show_expense_summary_graph(self, axes_labels=["Expense", "EUR"]):
+    def show_expense_summary_graph(self):
         """Method which shows the summary of all the expenses including child ones."""
         """Show the details of the object's expenses as a pie chart."""
         """Other classes can overwrite this and make the chart a bar chart for example."""

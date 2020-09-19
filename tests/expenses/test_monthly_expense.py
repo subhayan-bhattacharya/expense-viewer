@@ -31,29 +31,29 @@ def get_dummy_config_data():
     """Produce dummy config data for testing."""
     config = [
         {
-            'name': 'Category1',
-            'logical_operator': 'OR',
-            'identifiers': [
+            "name": "Category1",
+            "logical_operator": "OR",
+            "identifiers": [
                 {
-                    'value': 'desc1',
-                    'comparison_operator': 'contains',
-                    'column': 'Payment Details',
-                    'label': 'Category1'
+                    "value": "desc1",
+                    "comparison_operator": "contains",
+                    "column": "Payment Details",
+                    "label": "Category1",
                 }
-            ]
+            ],
         },
         {
-            'name': 'Category2',
-            'logical_operator': 'OR',
-            'identifiers': [
+            "name": "Category2",
+            "logical_operator": "OR",
+            "identifiers": [
                 {
-                    'value': 'desc2',
-                    'comparison_operator': 'contains',
-                    'column': 'Payment Details',
-                    'label': 'Category2'
+                    "value": "desc2",
+                    "comparison_operator": "contains",
+                    "column": "Payment Details",
+                    "label": "Category2",
                 }
-            ]
-        }
+            ],
+        },
     ]
     return config
 
@@ -65,18 +65,15 @@ def expense_data_for_category_1():
         "Transaction Type": ["Debit Card Payment"],
         "Payment Details": ["desc1"],
         "Debit": [100.00],
-        "Credit": [0],
-        "Value date": [
-            datetime.strptime("05/10/20", "%m/%d/%y"),
-        ],
-        "Indexes": [0],
+        "Credit": [0.0],
+        "Value date": [datetime.strptime("05/10/20", "%m/%d/%y"),],
     }
     data_pd = pd.DataFrame(data)
-    data_pd.set_index("Indexes", inplace=True)
+    data_pd.set_index([[0]], inplace=True)
     return data_pd
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def expense_data_for_category_2():
     """Return pandas data for category 1"""
     data = {
@@ -88,10 +85,9 @@ def expense_data_for_category_2():
             datetime.strptime("05/12/20", "%m/%d/%y"),
             datetime.strptime("05/14/20", "%m/%d/%y"),
         ],
-        "Indexes": [1, 2],
     }
     data_pd = pd.DataFrame(data)
-    data_pd.set_index("Indexes", inplace=True)
+    data_pd.set_index([[1, 2]], inplace=True)
     return data_pd
 
 
@@ -105,7 +101,7 @@ def init_monthly_expense(
 ):
     """Initialize the OverallExpense class."""
     obj = monthly_expense.MonthlyExpense(
-        expense=get_dummy_pandas_data, config=get_dummy_config_data, label='May'
+        expense=get_dummy_pandas_data, config=get_dummy_config_data, label="May"
     )
     request.cls.obj = obj
     request.cls.expenses = get_dummy_pandas_data
@@ -128,9 +124,20 @@ class TestMonthlyExpense:
     def test_add_child_expenses_method(self):
         """Test the functionality of add_child_expenses method of class."""
         self.obj.add_child_expenses()
-        # assert len(list(self.obj.child_expenses.keys())) == 2
-        print(self.obj.get_child_expense_labels())
-        # assert self.obj.child_expenses["Category1"].expense.equals(self.child_data_category_1)
-        # assert self.obj.child_expenses["Category2"].expense.equals(self.child_data_category_2)
+        assert len(list(self.obj.child_expenses.keys())) == 2
+        assert self.obj.child_expenses["Category1"].expense.equals(
+            self.child_data_category_1
+        )
+        assert self.obj.child_expenses["Category2"].expense.equals(
+            self.child_data_category_2
+        )
 
-
+    def test_show_expense_summary_graph(self, mocker):
+        """Test the method show_expense_summary_graph of the monthly expense class."""
+        mocked_display_pie_charts = mocker.patch(
+            "expense_viewer.utils.display_pie_charts"
+        )
+        self.obj.show_expense_summary_graph()
+        mocked_display_pie_charts.assert_called_with(
+            labels=["Category1", "Category2"], expenses=[100.00, 280.10]
+        )

@@ -35,4 +35,4 @@ class CategoryExpense(expense.Expense):
         if not self.child_expenses:
             print(f"This category expense does not have any child expenses.")
         else:
-            super().show_expense_summary_graph(axes_labels=["Category", "EUR"])
+            super().show_expense_summary_graph()
