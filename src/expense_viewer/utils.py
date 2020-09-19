@@ -8,9 +8,7 @@ import numpy as np
 import pandas as pd
 
 
-def get_full_condition_string(
-    condition: Dict[str, Any], dataframe_prefix: str = "data"
-) -> str:
+def get_full_condition_string(condition: Dict[str, Any]) -> str:
     """Construct a condition string using the condition dict."""
     identifiers = condition["identifiers"]
     logical_operator = condition["logical_operator"]
@@ -52,7 +50,7 @@ def get_condition_str_for_single_identifier(
 def get_row_index_for_matching_columns(
     condition: Dict[str, Any], data: pd.DataFrame
 ) -> List[int]:
-    """Get the row index for columns matching the condition in the dataframe."""
+    """Get the row index for columns matching the condition."""
     condition_str = get_full_condition_string(condition)
 
     result_dataframe = data[pd.eval(condition_str)]

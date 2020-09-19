@@ -66,7 +66,7 @@ def expense_data_for_category_1():
         "Payment Details": ["desc1"],
         "Debit": [100.00],
         "Credit": [0.0],
-        "Value date": [datetime.strptime("05/10/20", "%m/%d/%y"),],
+        "Value date": [datetime.strptime("05/10/20", "%m/%d/%y")],
     }
     data_pd = pd.DataFrame(data)
     data_pd.set_index([[0]], inplace=True)

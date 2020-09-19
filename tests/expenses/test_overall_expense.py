@@ -143,4 +143,3 @@ class TestOverallExpense:
             expenses=expenses,
             savings=savings,
         )
-

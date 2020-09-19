@@ -141,4 +141,3 @@ def test_get_expense_month(data, expected_month):
 def test_get_next_month_label(month, next_month):
     """Test for the function get_next_month_label."""
     assert utils.get_next_month_label(month) == next_month
-

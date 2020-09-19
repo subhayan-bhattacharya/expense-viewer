@@ -1,12 +1,10 @@
 import os
 import pathlib
-import io
 import csv
 
 
 import pandas as pd
 import pytest
-from ruamel import yaml
 
 import expense_viewer.main as main
 import expense_viewer.exceptions as exceptions
@@ -82,4 +80,3 @@ def test_load_details_from_expense_stmt(tmp_path):
     for column_name in expected_output.columns:
         assert output[column_name].dtype == expected_output[column_name].dtype
         assert list(expected_output[column_name]) == list(output[column_name])
-

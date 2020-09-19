@@ -1,8 +1,4 @@
 """File for single category expense."""
-
-from typing import Any, Dict
-
-from matplotlib import axes
 import pandas as pd
 
 from expense_viewer import utils as utils
@@ -34,6 +30,6 @@ class CategoryExpense(expense.Expense):
     def show_expense_summary_graph(self):
         """Show the expense details for a category."""
         if not self.child_expenses:
-            print(f"This category expense does not have any child expenses.")
+            print("This category expense does not have any child expenses.")
         else:
             super().show_expense_summary_graph()
