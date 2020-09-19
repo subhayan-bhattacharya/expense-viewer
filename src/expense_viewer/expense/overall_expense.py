@@ -25,7 +25,6 @@ class OverallExpense(expense.Expense):
             self.config["salary"], self.expense
         )
 
-        print(salary_row_indexes)
         # Divide the expense data into months as per the indexes and assign labels
         # The data before the first salary row is not taken into account
         # Also add the monthly expense objects into the list of child expenses
