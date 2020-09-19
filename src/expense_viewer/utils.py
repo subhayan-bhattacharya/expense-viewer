@@ -1,12 +1,11 @@
 """File which has the common utility functions inside the project."""
-
 import calendar
 import datetime
-import matplotlib
+from typing import Any, Dict, List
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from typing import Any, Dict, List
 
 
 def get_full_condition_string(

@@ -1,7 +1,8 @@
 """Contains the code for displaying the expenses of a single month."""
-import pandas as pd
+from typing import Any, Dict
 import warnings
-from typing import Dict, Any, List
+
+import pandas as pd
 
 import expense_viewer.expense.expense as expense
 import expense_viewer.expense.monthly_expense as monthly_expense

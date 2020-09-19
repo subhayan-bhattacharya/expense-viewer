@@ -1,11 +1,12 @@
 """File for monthly expenses."""
-from typing import Dict, Any, Set
-import pandas as pd
-from expense_viewer import exceptions
+from typing import Any, Dict, Set
 
-import expense_viewer.expense.expense as expense
-import expense_viewer.expense.category_expense as category_expense
+import pandas as pd
+
+from expense_viewer import exceptions
 from expense_viewer import utils as utils
+import expense_viewer.expense.category_expense as category_expense
+import expense_viewer.expense.expense as expense
 
 
 class MonthlyExpense(expense.Expense):
@@ -74,4 +75,3 @@ class MonthlyExpense(expense.Expense):
     def show_expense_summary_graph(self):
         """Show the details of the object's expenses as a bar chart."""
         super().show_expense_summary_graph()
-

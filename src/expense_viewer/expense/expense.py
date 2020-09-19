@@ -1,6 +1,8 @@
 """File for base class of Expense."""
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
+
 import pandas as pd
+
 from expense_viewer import utils
 
 
@@ -30,7 +32,8 @@ class Expense:
             labels.append(child.label)
 
         utils.display_pie_charts(
-            labels=labels, expenses=expenses,
+            labels=labels,
+            expenses=expenses,
         )
 
     def get_child_expense_labels(self) -> Optional[List[str]]:

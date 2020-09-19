@@ -1,11 +1,12 @@
 """File for single category expense."""
 
-from typing import Dict, Any
+from typing import Any, Dict
+
 from matplotlib import axes
 import pandas as pd
 
-import expense_viewer.expense.expense as expense
 from expense_viewer import utils as utils
+import expense_viewer.expense.expense as expense
 
 
 class CategoryExpense(expense.Expense):
