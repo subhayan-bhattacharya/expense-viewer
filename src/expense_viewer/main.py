@@ -6,6 +6,7 @@ import pandas as pd
 import ruamel.yaml
 
 import expense_viewer.exceptions as exceptions
+import expense_viewer.expense.expense
 import expense_viewer.expense.overall_expense as expense
 
 EXPECTED_FORMATS = (".csv",)
@@ -119,7 +120,9 @@ def load_details_from_expense_stmt(
         raise exceptions.CouldNotLoadSalaryStmtError(message=message) from exc
 
 
-def get_expense_report(config_file_path: str, salary_statement_path: str) -> None:
+def get_expense_report(
+    config_file_path: str, salary_statement_path: str
+) -> expense_viewer.expense.expense.Expense:
     """
     Get the expense report for the month in the salary statement.
 
@@ -143,3 +146,5 @@ def get_expense_report(config_file_path: str, salary_statement_path: str) -> Non
         return expense_obj
     except exceptions.Error as exc:
         print(exc)
+
+    assert False  # Again this line should never be reached.

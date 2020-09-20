@@ -25,6 +25,8 @@ def get_full_condition_string(condition: Dict[str, Any]) -> str:
     elif logical_operator == "AND":
         return " & ".join(identifier_strs)
 
+    assert False  # This line should never be reached .
+
 
 def get_condition_str_for_single_identifier(
     identifier: Dict[str, Any], dataframe_prefix: str = "data"
