@@ -80,7 +80,7 @@ class OverallExpense(expense.Expense):
             savings=savings,
         )
 
-    def get_total_expense_sum(self) -> None:
+    def get_total_expense_sum(self) -> float:
         """Show sum total of all the expenses."""
         raise NotImplementedError(
             "This method does not make sense of the Overall expense.."

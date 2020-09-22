@@ -1,4 +1,5 @@
 """File for base class of Expense."""
+
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
@@ -15,7 +16,7 @@ class Expense:
         self.expense = expense
         self.label = label
         self.config = config
-        self.child_expenses = {}
+        self.child_expenses: Dict[str, Any] = {}
 
     def show_expense_summary_graph(self):
         """Method which shows the summary of all the expenses including child ones."""

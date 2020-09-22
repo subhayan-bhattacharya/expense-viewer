@@ -76,7 +76,7 @@ def get_next_month_label(month: str) -> str:
     """Get the next month of the month supplied as input."""
     datetime_object = datetime.datetime.strptime(month, "%B")
 
-    next_month_num = calendar.nextmonth(
+    next_month_num = calendar.nextmonth(  # type: ignore
         datetime.datetime.now().year, datetime_object.month
     )[1]
     return datetime.date(1900, next_month_num, 1).strftime("%B")
