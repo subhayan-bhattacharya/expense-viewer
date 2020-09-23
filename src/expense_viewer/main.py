@@ -2,8 +2,8 @@ import logging
 import pathlib
 import typing
 
+import omegaconf
 import pandas as pd
-import ruamel.yaml
 
 import expense_viewer.exceptions as exceptions
 import expense_viewer.expense.expense
@@ -19,38 +19,6 @@ def replace_comma_if_string(value: typing.Union[str, float]):
     if isinstance(value, str):
         return value.replace(",", "")
     return value
-
-
-def read_yaml_file_contents(yaml_file_path: pathlib.Path) -> typing.Dict:
-    """
-    Read a yaml file and return the contents.
-
-    Parameters
-    ----------
-    yaml_file_path:
-        Full path of the yaml file to be read
-
-    Returns
-    -------
-    typing.Dict
-        The contents of the yaml file as a dict
-
-    Raises
-    ------
-    CouldNotLoadYamlFile
-        When the yaml file could not be found for reading
-    """
-    logger.debug(f"Read contents of yaml file {yaml_file_path}")
-
-    try:
-        yaml = ruamel.yaml.YAML()
-        with open(yaml_file_path, "r") as stream:
-            contents = yaml.load(stream)
-        return contents
-    except Exception as exc:
-        message = f"Could not read yaml file..{yaml_file_path}"
-        logger.error(f"{message}", exc_info=True)
-        raise exceptions.CouldNotLoadYamlFileError(message=message) from exc
 
 
 def check_format_of_salary_statement(salary_statement_path: pathlib.Path) -> None:
@@ -136,7 +104,7 @@ def get_expense_report(
     config_file = pathlib.Path(config_file_path)
     salary_statement = pathlib.Path(salary_statement_path)
     try:
-        config = read_yaml_file_contents(config_file)
+        config = omegaconf.OmegaConf.load(config_file)
         check_format_of_salary_statement(salary_statement_path=salary_statement)
         salary_details = load_details_from_expense_stmt(
             expense_statement=salary_statement

@@ -2,6 +2,7 @@
 
 from typing import Any, Dict, List, Optional
 
+import omegaconf
 import pandas as pd
 
 from expense_viewer import utils
@@ -11,7 +12,7 @@ class Expense:
     """Expense base class."""
 
     def __init__(
-        self, expense: pd.DataFrame, config: Dict[str, Any], label: str
+        self, expense: pd.DataFrame, config: omegaconf.dictconfig.DictConfig, label: str
     ) -> None:
         self.expense = expense
         self.label = label

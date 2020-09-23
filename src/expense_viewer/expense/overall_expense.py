@@ -1,7 +1,7 @@
 """Contains the code for displaying the expenses of a single month."""
-from typing import Any, Dict
 import warnings
 
+import omegaconf
 import pandas as pd
 
 import expense_viewer.expense.expense as expense
@@ -13,7 +13,10 @@ class OverallExpense(expense.Expense):
     """Class for calculating and displaying overall expenses incurred for a list of months."""
 
     def __init__(
-        self, expense: pd.DataFrame, config: Dict[str, Any], label: str = "Overall"
+        self,
+        expense: pd.DataFrame,
+        config: omegaconf.dictconfig.DictConfig,
+        label: str = "Overall"
     ) -> None:
         super().__init__(expense=expense, config=config, label=label)
 

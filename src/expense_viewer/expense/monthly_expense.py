@@ -1,19 +1,23 @@
 """File for monthly expenses."""
-from typing import Any, Dict, Set
+from typing import Dict, Set
 
+import omegaconf
 import pandas as pd
 
-from expense_viewer import exceptions
-from expense_viewer import utils as utils
 import expense_viewer.expense.category_expense as category_expense
 import expense_viewer.expense.expense as expense
+from expense_viewer import exceptions
+from expense_viewer import utils as utils
 
 
 class MonthlyExpense(expense.Expense):
     """Monthly expense category for application."""
 
     def __init__(
-        self, expense: pd.DataFrame, config: Dict[str, Any], label: str = "Overall"
+        self,
+        expense: pd.DataFrame,
+        config: omegaconf.dictconfig.DictConfig,
+        label: str = "Overall"
     ) -> None:
         super().__init__(expense=expense, config=config, label=label)
         self._all_found_category_indices: Set[int] = set()
