@@ -21,25 +21,28 @@ def replace_comma_if_string(value: typing.Union[str, float]):
     return value
 
 
-def check_format_of_salary_statement(salary_statement_path: pathlib.Path) -> None:
+def check_format_of_salary_statement(
+    salary_statement_paths: typing.Iterable[pathlib.Path],
+) -> None:
     """
     Check that the format of salary statement is in the right format.
 
     Parameters
     ----------
-    salary_statement_path : pathlib.Path
-        The salary statement file full path
+    salary_statement_paths : Iterable[pathlib.Path]
+        An iterable of salary statement paths.
 
     Raises
     ------
     WrongFormatError
         When the format of the salary statement is not right
     """
-    format_of_file = salary_statement_path.suffix
-    if format_of_file not in EXPECTED_FORMATS:
-        message = f"The file {salary_statement_path} is not in right format"
-        logger.error(message)
-        raise exceptions.WrongFormatError(message=message)
+    for salary_statement_path in salary_statement_paths:
+        format_of_file = salary_statement_path.suffix
+        if format_of_file not in EXPECTED_FORMATS:
+            message = f"The file {salary_statement_path} is not in right format"
+            logger.error(message)
+            raise exceptions.WrongFormatError(message=message)
 
 
 def load_details_from_expense_stmt(
@@ -88,8 +91,32 @@ def load_details_from_expense_stmt(
         raise exceptions.CouldNotLoadSalaryStmtError(message=message) from exc
 
 
+def load_details_from_all_expense_stmts(
+    expense_statements: typing.Iterable[pathlib.Path],
+) -> pd.core.frame.DataFrame:
+    """
+    Load the salary details from an iterable of files.
+
+    Parameters
+    ----------
+    expense_statements: Iterable[pathlib.Path]
+        An iterator having the full path of the salary statements.
+    """
+    all_salary_statements_concatenated = pd.concat(
+        [
+            load_details_from_expense_stmt(expense_statement=statement_path)
+            for statement_path in expense_statements
+        ]
+    )
+    all_salary_statements_concatenated.sort_values(by=["Value date"], inplace=True)
+    all_salary_statements_concatenated.drop_duplicates(inplace=True)
+    all_salary_statements_concatenated.reset_index(inplace=True)
+    all_salary_statements_concatenated.drop(columns=["index"], inplace=True)
+    return all_salary_statements_concatenated
+
+
 def get_expense_report(
-    config_file_path: str, salary_statement_path: str
+    config_file_path: str, salary_statement_path: str, is_dir: bool = True
 ) -> expense_viewer.expense.expense.Expense:
     """
     Get the expense report for the month in the salary statement.
@@ -100,15 +127,26 @@ def get_expense_report(
         The full path of the config yaml file containing the expense rules.
     salary_statement_path : str
         The full path of the csv file containing the salary statement of the month.
+    is_dir: bool
+        Is the salary statement path a directory of a single path string.
     """
     config_file = pathlib.Path(config_file_path)
     salary_statement = pathlib.Path(salary_statement_path)
     try:
         config = omegaconf.OmegaConf.load(config_file)
-        check_format_of_salary_statement(salary_statement_path=salary_statement)
-        salary_details = load_details_from_expense_stmt(
-            expense_statement=salary_statement
-        )
+        if is_dir:
+            # The salary statements are in a directory
+            check_format_of_salary_statement(
+                salary_statement_paths=salary_statement_path.glob("*")
+            )
+            salary_details = load_details_from_all_expense_stmts(
+                expense_statements=salary_statement_path.glob("*")
+            )
+        else:
+            check_format_of_salary_statement(salary_statement_paths=salary_statement)
+            salary_details = load_details_from_expense_stmt(
+                expense_statement=salary_statement
+            )
         expense_obj = expense.OverallExpense(expense=salary_details, config=config)
         expense_obj.add_child_expenses()
         return expense_obj
