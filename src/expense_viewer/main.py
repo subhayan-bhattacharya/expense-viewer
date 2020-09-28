@@ -143,7 +143,7 @@ def get_expense_report(
                 expense_statements=salary_statement_path.glob("*")
             )
         else:
-            check_format_of_salary_statement(salary_statement_paths=salary_statement)
+            check_format_of_salary_statement(salary_statement_paths=(salary_statement,))
             salary_details = load_details_from_expense_stmt(
                 expense_statement=salary_statement
             )
