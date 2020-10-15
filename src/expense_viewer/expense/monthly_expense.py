@@ -17,7 +17,7 @@ class MonthlyExpense(expense.Expense):
         self,
         expense: pd.DataFrame,
         config: omegaconf.dictconfig.DictConfig,
-        label: str = "Overall"
+        label: str = "Overall",
     ) -> None:
         super().__init__(expense=expense, config=config, label=label)
         self._all_found_category_indices: Set[int] = set()
@@ -76,7 +76,7 @@ class MonthlyExpense(expense.Expense):
             if common_indices:
                 raise exceptions.ExpenseDataAlreadyInOtherExpenseError(
                     f"There are {common_indices} common indices with "
-                    "category {category}... filter condition needs to be checked."
+                    f"category {category}... for the month {self.label}."
                 )
 
     def show_expense_summary_graph(self):
