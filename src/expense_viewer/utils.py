@@ -49,6 +49,15 @@ def get_condition_str_for_single_identifier(
         )
 
 
+def break_up_dataframe_in_chunks(data: pd.DataFrame, indices: List[int]):
+    """Divide a dataframe into chunks as per supplied indexes."""
+    start_index = 0
+    for index in indices:
+        yield data[start_index:index]
+        start_index = index + 1
+    yield data[start_index:]
+
+
 def get_row_index_for_matching_columns(
     condition: Dict[str, Any], data: pd.DataFrame
 ) -> List[int]:
@@ -85,9 +94,9 @@ def get_next_month_label(month: str) -> str:
 def display_bar_charts(
     labels: List[str], axes_labels: List[str], **data_to_plot
 ) -> None:
-    """Display grouped bar charts with annotations using matoplotlib."""
+    """Display grouped bar charts with annotations using matplotlib."""
     x = np.arange(len(labels))  # the label locations
-    width = 0.35  # the width of the bars
+    width = 0.3  # the width of the bars
 
     _, ax = plt.subplots()
 

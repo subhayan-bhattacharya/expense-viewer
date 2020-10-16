@@ -1,5 +1,6 @@
 """Contains the code for displaying the expenses of a single month."""
 import warnings
+import itertools
 
 import omegaconf
 import pandas as pd
@@ -16,7 +17,7 @@ class OverallExpense(expense.Expense):
         self,
         expense: pd.DataFrame,
         config: omegaconf.dictconfig.DictConfig,
-        label: str = "Overall"
+        label: str = "Overall",
     ) -> None:
         super().__init__(expense=expense, config=config, label=label)
 
@@ -32,18 +33,11 @@ class OverallExpense(expense.Expense):
         # Divide the expense data into months as per the indexes and assign labels
         # The data before the first salary row is not taken into account
         # Also add the monthly expense objects into the list of child expenses
-        for index in range(len(salary_row_indexes)):
-            if index < len(salary_row_indexes) - 1:
-                # If the loop has not the last index
-                start_index = salary_row_indexes[index]
-
-                end_index = salary_row_indexes[index + 1]
-
-                data = self.expense[start_index + 1 : end_index]
-            else:
-                # Take all the expenses from the last salary row column and beyond
-                data = self.expense[salary_row_indexes[index] + 1 :]
-
+        for data in itertools.islice(
+            utils.break_up_dataframe_in_chunks(self.expense, salary_row_indexes),
+            1,
+            None,
+        ):
             month = utils.get_expense_month(data)
 
             if month in self.child_expenses.keys():
