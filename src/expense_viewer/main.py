@@ -130,17 +130,17 @@ def get_expense_report(
     is_dir: bool
         Is the salary statement path a directory of a single path string.
     """
-    config_file = pathlib.Path(config_file_path)
-    salary_statement = pathlib.Path(salary_statement_path)
+    config_file: pathlib.Path = pathlib.Path(config_file_path)
+    salary_statement: pathlib.Path = pathlib.Path(salary_statement_path)
     try:
         config = omegaconf.OmegaConf.load(config_file)
         if is_dir:
             # The salary statements are in a directory
             check_format_of_salary_statement(
-                salary_statement_paths=salary_statement_path.glob("*")
+                salary_statement_paths=salary_statement.glob("*")
             )
             salary_details = load_details_from_all_expense_stmts(
-                expense_statements=salary_statement_path.glob("*")
+                expense_statements=salary_statement.glob("*")
             )
         else:
             check_format_of_salary_statement(salary_statement_paths=(salary_statement,))
@@ -154,4 +154,3 @@ def get_expense_report(
         print(exc)
 
     assert False  # Again this line should never be reached.
-

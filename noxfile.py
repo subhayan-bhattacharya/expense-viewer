@@ -11,4 +11,4 @@ def tests(session):
 def lint(session):
     session.install("flake8", "mypy")
     session.run("flake8", "--extend-ignore=E203", "src", "tests")
-    session.run("mypy", "src", "tests", "tests/expenses")
+    session.run("mypy", "src", "tests")

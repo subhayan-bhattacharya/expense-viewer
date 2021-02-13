@@ -87,7 +87,7 @@ class OverallExpense(expense.Expense):
 
     def get_expense_summary_dataframe(self) -> pd.DataFrame:
         """Show the expense summary as a streamlet application."""
-        data: Dict[str, List[int, int]] = {}
+        data: Dict[str, List[int]] = {}
 
         for label in self.child_expenses:
             child = self.child_expenses[label]
@@ -98,4 +98,3 @@ class OverallExpense(expense.Expense):
         return pd.DataFrame.from_dict(
             data=data, orient="index", columns=["Expenses", "Savings"]
         )
-
