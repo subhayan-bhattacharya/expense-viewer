@@ -154,3 +154,4 @@ def get_expense_report(
         print(exc)
 
     assert False  # Again this line should never be reached.
+

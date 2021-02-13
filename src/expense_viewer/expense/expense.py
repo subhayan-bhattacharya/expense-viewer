@@ -34,8 +34,7 @@ class Expense:
             labels.append(child.label)
 
         utils.display_pie_charts(
-            labels=labels,
-            expenses=expenses,
+            labels=labels, expenses=expenses,
         )
 
     def get_child_expense_labels(self) -> Optional[List[str]]:
@@ -46,3 +45,7 @@ class Expense:
         """Sum all the expenses and give back a total sum."""
         expense = sum(self.expense["Debit"]) - sum(self.expense["Credit"])
         return expense
+
+    def get_expense_summary_dataframe(self):
+        """Get a dataframe of the expense summary for the month."""
+        raise NotImplementedError

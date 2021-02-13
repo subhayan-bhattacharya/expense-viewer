@@ -1,4 +1,5 @@
 """Contains the code for displaying the expenses of a single month."""
+from typing import Dict, List
 import warnings
 import itertools
 
@@ -83,3 +84,18 @@ class OverallExpense(expense.Expense):
             "This method does not make sense of the Overall expense.."
             "please check child expenses."
         )
+
+    def get_expense_summary_dataframe(self) -> pd.DataFrame:
+        """Show the expense summary as a streamlet application."""
+        data: Dict[str, List[int, int]] = {}
+
+        for label in self.child_expenses:
+            child = self.child_expenses[label]
+            expenses_in_month = round(child.get_total_expense_sum(), 2)
+            savings_in_month = round(3373 - expenses_in_month, 2)
+            data[label] = [expenses_in_month, savings_in_month]
+
+        return pd.DataFrame.from_dict(
+            data=data, orient="index", columns=["Expenses", "Savings"]
+        )
+
