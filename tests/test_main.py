@@ -12,7 +12,7 @@ import expense_viewer.exceptions as exceptions
 def test_check_format_of_salary_statement_for_correct_format():
     """Test the function check_format_of_salary_statement works."""
     try:
-        main.check_format_of_salary_statement(pathlib.Path("/a/b/c/salary.csv"))
+        main.check_format_of_salary_statement([pathlib.Path("/a/b/c/salary.csv")])
     except Exception:
         pytest.fail("Unexpected error")
 
@@ -20,7 +20,7 @@ def test_check_format_of_salary_statement_for_correct_format():
 def test_check_format_of_salary_statement_for_incorrect_format():
     """Test the function check_format_of_salary_statement fails for wrong format."""
     with pytest.raises(exceptions.WrongFormatError):
-        main.check_format_of_salary_statement(pathlib.Path("a/b/c/salary.xls"))
+        main.check_format_of_salary_statement([pathlib.Path("a/b/c/salary.xls")])
 
 
 def test_load_details_from_expense_stmt(tmp_path):
