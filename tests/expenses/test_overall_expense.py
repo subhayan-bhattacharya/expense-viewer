@@ -116,12 +116,12 @@ class TestOverallExpense:
         """Test the functionality of add_child_expenses method of class."""
         self.obj.add_child_expenses()
         assert len(list(self.obj.child_expenses.keys())) == 2
-        assert self.obj.child_expenses["May"].expense.equals(self.child_data_may)
-        assert self.obj.child_expenses["June"].expense.equals(self.child_data_june)
+        assert self.obj.child_expenses["May-2020"].expense.equals(self.child_data_may)
+        assert self.obj.child_expenses["June-2020"].expense.equals(self.child_data_june)
 
     def test_get_child_expense_labels(self):
         """Test the function get_child_expense_labels."""
-        assert self.obj.get_child_expense_labels() == ["May", "June"]
+        assert self.obj.get_child_expense_labels() == ["May-2020", "June-2020"]
 
     def test_get_total_expense_sum(self):
         """Test the function get_total_expense_sum."""
@@ -133,7 +133,7 @@ class TestOverallExpense:
         mocked_display_bar_charts = mocker.patch(
             "expense_viewer.utils.display_bar_charts"
         )
-        labels = ["May", "June"]
+        labels = ["May-2020", "June-2020"]
         expenses = [-409.9, -195.00]
         savings = [3782.9, 3568.00]
         self.obj.show_expense_summary_graph()

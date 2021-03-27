@@ -69,26 +69,32 @@ def get_row_index_for_matching_columns(
     return list(result_dataframe.index.values)
 
 
-def get_expense_month(expense: pd.DataFrame) -> str:
+def get_expense_month_year(expense: pd.DataFrame) -> str:
     """Get the expense month from the data."""
     expense_copy = expense.copy()
 
     months = expense_copy["Value date"].dt.month
+    year = expense_copy["Value date"].dt.year
 
     most_frequent_month_int = months.value_counts().idxmax()
+    most_frequent_month_year = year.value_counts().idxmax()
 
+    most_frequent_month_str = datetime.date(1900, most_frequent_month_int, 1).strftime(
+        "%B"
+    )
     # Convert the month number(1/2) into a month string(January/February etc)
-    return datetime.date(1900, most_frequent_month_int, 1).strftime("%B")
+    return f"{most_frequent_month_str}-{most_frequent_month_year}"
 
 
-def get_next_month_label(month: str) -> str:
+def get_next_month_label(month_year_label: str) -> str:
     """Get the next month of the month supplied as input."""
+    month, year = month_year_label.split("-")
     datetime_object = datetime.datetime.strptime(month, "%B")
 
-    next_month_num = calendar.nextmonth(  # type: ignore
-        datetime.datetime.now().year, datetime_object.month
-    )[1]
-    return datetime.date(1900, next_month_num, 1).strftime("%B")
+    next_year, next_month = calendar.nextmonth(  # type: ignore
+        int(year), datetime_object.month
+    )
+    return f"{datetime.date(1900, next_month, 1).strftime('%B')}-{next_year}"
 
 
 def display_bar_charts(

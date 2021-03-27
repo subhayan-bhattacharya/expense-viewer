@@ -39,22 +39,24 @@ class OverallExpense(expense.Expense):
             1,
             None,
         ):
-            month = utils.get_expense_month(data)
+            month_year_label = utils.get_expense_month_year(data)
 
-            if month in self.child_expenses.keys():
+            if month_year_label in self.child_expenses.keys():
                 # Check if the month is already added then select the next month
                 warnings.warn(
-                    f"{month} has already been added to the child expenses..."
+                    f"{month_year_label} has already been added to the child expenses..."
                     "adding next month's label to the data"
                 )
-                month = utils.get_next_month_label(month)
-                warnings.warn(f"The next month {month} has been chosen for the data")
+                month_year_label = utils.get_next_month_label(month_year_label)
+                warnings.warn(
+                    f"The next month {month_year_label} has been chosen for the data"
+                )
 
-            self.child_expenses[month] = monthly_expense.MonthlyExpense(
-                expense=data, config=expense_categories, label=month
+            self.child_expenses[month_year_label] = monthly_expense.MonthlyExpense(
+                expense=data, config=expense_categories, label=month_year_label
             )
             # Delegate to the child object to add its own expenses
-            self.child_expenses[month].add_child_expenses()
+            self.child_expenses[month_year_label].add_child_expenses()
 
     def show_expense_summary_graph(self) -> None:
         """Show expense details for each of the child months."""
