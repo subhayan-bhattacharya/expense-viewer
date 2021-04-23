@@ -7,3 +7,5 @@ Bank statements/
 *.pyc
 *.log
 *.csv
+*.yaml
+*.yml
