@@ -61,7 +61,7 @@ def load_details_from_expense_stmt(
         "Payment Details",
         "Debit",
         "Credit",
-        "Value date",
+        "Value date"
     ]
 
     try:
@@ -72,13 +72,13 @@ def load_details_from_expense_stmt(
             skiprows=4,
             delimiter=";",
             usecols=columns_to_use,
-            parse_dates=["Value date"],
         )
         transactions.drop(transactions.tail(1).index, inplace=True)
         transactions["Credit"] = transactions["Credit"].apply(replace_comma_if_string)
         transactions["Debit"] = transactions["Debit"].apply(replace_comma_if_string)
         transactions["Credit"] = transactions["Credit"].astype("float64")
         transactions["Debit"] = transactions["Debit"].astype("float64")
+        transactions["Value date"] = transactions["Value date"].astype("datetime64")
         transactions["Credit"].fillna(0, inplace=True)
         transactions["Debit"].fillna(0, inplace=True)
         transactions["Debit"] = transactions["Debit"].apply(
