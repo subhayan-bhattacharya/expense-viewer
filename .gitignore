@@ -7,5 +7,5 @@ Bank statements/
 *.pyc
 *.log
 *.csv
-*.yaml
-*.yml
+.idea/
+*expense_config*
