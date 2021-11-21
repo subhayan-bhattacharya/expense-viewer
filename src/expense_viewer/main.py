@@ -61,7 +61,7 @@ def load_details_from_expense_stmt(
         "Payment Details",
         "Debit",
         "Credit",
-        "Value date"
+        "Value date",
     ]
 
     try:

@@ -1,3 +1,5 @@
 import setuptools
 
-setuptools.setup(python_requires=">=3.7",)
+setuptools.setup(
+    python_requires=">=3.7",
+)
