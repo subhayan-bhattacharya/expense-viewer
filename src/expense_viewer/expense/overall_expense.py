@@ -58,28 +58,6 @@ class OverallExpense(expense.Expense):
             # Delegate to the child object to add its own expenses
             self.child_expenses[month_year_label].add_child_expenses()
 
-    def show_expense_summary_graph(self) -> None:
-        """Show expense details for each of the child months."""
-        labels = []
-        expenses = []
-        savings = []
-
-        for label in self.child_expenses:
-            child = self.child_expenses[label]
-            expenses_in_month = round(child.get_total_expense_sum(), 2)
-            savings_in_month = round(3373 - expenses_in_month, 2)
-
-            expenses.append(expenses_in_month)
-            savings.append(savings_in_month)
-            labels.append(child.label)
-
-        utils.display_bar_charts(
-            labels=labels,
-            axes_labels=["Months", "EUR"],
-            expenses=expenses,
-            savings=savings,
-        )
-
     def get_total_expense_sum(self) -> float:
         """Show sum total of all the expenses."""
         raise NotImplementedError(
@@ -88,7 +66,7 @@ class OverallExpense(expense.Expense):
         )
 
     def get_expense_summary_dataframe(self) -> pd.DataFrame:
-        """Show the expense summary as a streamlet application."""
+        """Show the expense summary."""
         data: Dict[str, List[int]] = {}
 
         for label in self.child_expenses:

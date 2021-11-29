@@ -45,7 +45,7 @@ def check_format_of_salary_statement(
             raise exceptions.WrongFormatError(message=message)
 
 
-def load_details_from_expense_stmt(
+def _load_details_from_expense_stmt(
     expense_statement: pathlib.Path,
 ) -> pd.core.frame.DataFrame:
     """
@@ -104,7 +104,7 @@ def load_details_from_all_expense_stmts(
     """
     all_salary_statements_concatenated = pd.concat(
         [
-            load_details_from_expense_stmt(expense_statement=statement_path)
+            _load_details_from_expense_stmt(expense_statement=statement_path)
             for statement_path in expense_statements
         ]
     )
@@ -144,7 +144,7 @@ def get_expense_report(
             )
         else:
             check_format_of_salary_statement(salary_statement_paths=(salary_statement,))
-            salary_details = load_details_from_expense_stmt(
+            salary_details = _load_details_from_expense_stmt(
                 expense_statement=salary_statement
             )
         expense_obj = expense.OverallExpense(expense=salary_details, config=config)

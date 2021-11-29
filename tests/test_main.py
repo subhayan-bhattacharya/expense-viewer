@@ -24,7 +24,7 @@ def test_check_format_of_salary_statement_for_incorrect_format():
 
 
 def test_load_details_from_expense_stmt(tmp_path):
-    """Test the function load_details_from_expense_stmt."""
+    """Test the function _load_details_from_expense_stmt."""
     my_dummy_csv_data = [
         [1],
         [2],
@@ -44,7 +44,7 @@ def test_load_details_from_expense_stmt(tmp_path):
         for row in my_dummy_csv_data:
             writer.writerow(row)
 
-    output = main.load_details_from_expense_stmt(dummy_csv_file)
+    output = main._load_details_from_expense_stmt(dummy_csv_file)
 
     expected_output = pd.DataFrame(
         {

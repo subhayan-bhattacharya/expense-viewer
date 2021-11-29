@@ -5,8 +5,6 @@ from typing import Any, Dict, List, Optional
 import omegaconf
 import pandas as pd
 
-from expense_viewer import utils
-
 
 class Expense:
     """Expense base class."""
@@ -18,25 +16,6 @@ class Expense:
         self.label = label
         self.config = config
         self.child_expenses: Dict[str, Any] = {}
-
-    def show_expense_summary_graph(self):
-        """Method which shows the summary of all the expenses including child ones."""
-        """Show the details of the object's expenses as a pie chart."""
-        """Other classes can overwrite this and make the chart a bar chart for example."""
-        labels = []
-        expenses = []
-
-        for category_name in self.child_expenses:
-            child = self.child_expenses[category_name]
-            expenses_in_category = round(child.get_total_expense_sum(), 2)
-
-            expenses.append(expenses_in_category)
-            labels.append(child.label)
-
-        utils.display_pie_charts(
-            labels=labels,
-            expenses=expenses,
-        )
 
     def get_child_expense_labels(self) -> Optional[List[str]]:
         """Show the child expense labels associated with the expense object."""

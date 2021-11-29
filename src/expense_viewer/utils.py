@@ -1,11 +1,9 @@
 """File which has the common utility functions inside the project."""
-import calendar
 import datetime
 from typing import Any, Dict, List
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
+from dateutil.relativedelta import relativedelta
 
 
 def get_full_condition_string(condition: Dict[str, Any]) -> str:
@@ -88,70 +86,6 @@ def get_expense_month_year(expense: pd.DataFrame) -> str:
 
 def get_next_month_label(month_year_label: str) -> str:
     """Get the next month of the month supplied as input."""
-    month, year = month_year_label.split("-")
-    datetime_object = datetime.datetime.strptime(month, "%B")
-
-    next_year, next_month = calendar.nextmonth(  # type: ignore
-        int(year), datetime_object.month
-    )
-    return f"{datetime.date(1900, next_month, 1).strftime('%B')}-{next_year}"
-
-
-def display_bar_charts(
-    labels: List[str], axes_labels: List[str], **data_to_plot
-) -> None:
-    """Display grouped bar charts with annotations using matplotlib."""
-    x = np.arange(len(labels))  # the label locations
-    width = 0.3  # the width of the bars
-
-    _, ax = plt.subplots()
-
-    def autolabel(rects):
-        for rect in rects:
-            height = rect.get_height()
-            ax.annotate(
-                "{}".format(height),
-                xy=(rect.get_x() + rect.get_width() / 2, height),
-                xytext=(0, 3),  # 3 points vertical offset
-                textcoords="offset points",
-                ha="center",
-                va="bottom",
-            )
-
-    x_loc = x
-
-    for data in data_to_plot:
-        rects = ax.bar(x_loc, data_to_plot[data], width, label=data)
-        autolabel(rects)
-        x_loc = [y + width for y in x_loc]
-
-    ax.set_ylabel(axes_labels[1])
-    ax.set_xlabel(axes_labels[0])
-    ax.set_xticks(x)
-    ax.set_xticklabels(labels)
-    ax.legend()
-
-    plt.ylim(0, 5000)
-    plt.show()
-
-
-def display_pie_charts(labels: List[str], expenses: List[float]) -> None:
-    """Display pie charts using the data provided."""
-
-    def absolute_value(val):
-        """Get absolute value in a pie chart."""
-        a = np.round(val / 100.0 * sum(expenses), 2)
-        return a
-
-    explode = tuple([0] * len(labels))
-    fig1, ax1 = plt.subplots()
-    ax1.pie(
-        expenses,
-        explode=explode,
-        labels=labels,
-        autopct=absolute_value,
-        shadow=True,
-        startangle=90,
-    )
-    ax1.axis("equal")
-    plt.show()
+    datetime_object = datetime.datetime.strptime(month_year_label, "%B-%Y")
+    next_month = datetime_object + relativedelta(months=1)
+    return next_month.strftime('%B-%Y')

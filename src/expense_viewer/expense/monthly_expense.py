@@ -1,4 +1,5 @@
 """File for monthly expenses."""
+import warnings
 from typing import Dict, Set
 
 import omegaconf
@@ -52,7 +53,7 @@ class MonthlyExpense(expense.Expense):
                 )
                 self.child_expenses[category["name"]].add_child_expenses()
             else:
-                print(
+                warnings.warn(
                     f"No child expenses found for category {category['name']}"
                     f"for the month {self.label}"
                 )
@@ -79,6 +80,3 @@ class MonthlyExpense(expense.Expense):
                     f"category {category}... for the month {self.label}."
                 )
 
-    def show_expense_summary_graph(self):
-        """Show the details of the object's expenses as a bar chart."""
-        super().show_expense_summary_graph()

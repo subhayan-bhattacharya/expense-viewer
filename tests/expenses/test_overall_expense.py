@@ -127,19 +127,3 @@ class TestOverallExpense:
         """Test the function get_total_expense_sum."""
         with pytest.raises(NotImplementedError):
             self.obj.get_total_expense_sum()
-
-    def test_show_expense_summary_graph(self, mocker):
-        """Test the function show_expense_summary_graph."""
-        mocked_display_bar_charts = mocker.patch(
-            "expense_viewer.utils.display_bar_charts"
-        )
-        labels = ["May-2020", "June-2020"]
-        expenses = [-409.9, -195.00]
-        savings = [3782.9, 3568.00]
-        self.obj.show_expense_summary_graph()
-        mocked_display_bar_charts.assert_called_with(
-            labels=labels,
-            axes_labels=["Months", "EUR"],
-            expenses=expenses,
-            savings=savings,
-        )

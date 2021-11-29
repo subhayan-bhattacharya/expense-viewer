@@ -131,13 +131,3 @@ class TestMonthlyExpense:
         assert self.obj.child_expenses["Category2"].expense.equals(
             self.child_data_category_2
         )
-
-    def test_show_expense_summary_graph(self, mocker):
-        """Test the method show_expense_summary_graph of the monthly expense class."""
-        mocked_display_pie_charts = mocker.patch(
-            "expense_viewer.utils.display_pie_charts"
-        )
-        self.obj.show_expense_summary_graph()
-        mocked_display_pie_charts.assert_called_with(
-            labels=["Category1", "Category2"], expenses=[100.00, 280.10]
-        )
