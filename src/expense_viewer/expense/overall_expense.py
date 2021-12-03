@@ -1,7 +1,8 @@
 """Contains the code for displaying the expenses of a single month."""
-from typing import Dict, List
-import warnings
+import collections
 import itertools
+from typing import Dict, List, Any
+import warnings
 
 import omegaconf
 import pandas as pd
@@ -9,6 +10,8 @@ import pandas as pd
 import expense_viewer.expense.expense as expense
 import expense_viewer.expense.monthly_expense as monthly_expense
 import expense_viewer.utils as utils
+
+_CREDIT_COLUMN_NAME = "Credit"
 
 
 class OverallExpense(expense.Expense):
@@ -21,6 +24,20 @@ class OverallExpense(expense.Expense):
         label: str = "Overall",
     ) -> None:
         super().__init__(expense=expense, config=config, label=label)
+        self._extra_credit_data_per_month: Dict[str, int] = {}
+
+    def get_expenses_report(self) -> pd.DataFrame:
+        """Get a summary of expenses/credits for each month."""
+        summary: Dict[str, Any] = collections.defaultdict(list)
+
+        for month in self.child_expenses.keys():
+            summary["Month"].append(month)
+            summary["Expenses"].append(
+                self.child_expenses[month].get_total_expense_sum()
+            )
+            summary["Credits"].append(self._extra_credit_data_per_month[month])
+
+        return pd.DataFrame.from_dict(summary)
 
     def add_child_expenses(self):
         """Adds the child expenses for its expense category."""
@@ -39,7 +56,14 @@ class OverallExpense(expense.Expense):
             1,
             None,
         ):
-            month_year_label = utils.get_expense_month_year(data)
+            # Check if there are any credits which happened in this month apart from salary
+            # if that is the case then we remove that from expenses
+            expense_data_for_month = data[data[_CREDIT_COLUMN_NAME] == 0]
+
+            # But we also want to save the credit
+            credit_data_for_month = data[data[_CREDIT_COLUMN_NAME] > 0]
+
+            month_year_label = utils.get_expense_month_year(expense_data_for_month)
 
             if month_year_label in self.child_expenses.keys():
                 # Check if the month is already added then select the next month
@@ -52,8 +76,13 @@ class OverallExpense(expense.Expense):
                     f"The next month {month_year_label} has been chosen for the data"
                 )
 
+            self._extra_credit_data_per_month[month_year_label] = sum(
+                credit_data_for_month[_CREDIT_COLUMN_NAME]
+            )
             self.child_expenses[month_year_label] = monthly_expense.MonthlyExpense(
-                expense=data, config=expense_categories, label=month_year_label
+                expense=expense_data_for_month,
+                config=expense_categories,
+                label=month_year_label,
             )
             # Delegate to the child object to add its own expenses
             self.child_expenses[month_year_label].add_child_expenses()

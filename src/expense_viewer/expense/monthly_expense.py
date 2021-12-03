@@ -1,14 +1,13 @@
 """File for monthly expenses."""
-import warnings
 from typing import Dict, Set
 
 import omegaconf
 import pandas as pd
 
-import expense_viewer.expense.category_expense as category_expense
-import expense_viewer.expense.expense as expense
 from expense_viewer import exceptions
 from expense_viewer import utils as utils
+import expense_viewer.expense.category_expense as category_expense
+import expense_viewer.expense.expense as expense
 
 
 class MonthlyExpense(expense.Expense):
@@ -52,11 +51,6 @@ class MonthlyExpense(expense.Expense):
                     label=category["name"],
                 )
                 self.child_expenses[category["name"]].add_child_expenses()
-            else:
-                warnings.warn(
-                    f"No child expenses found for category {category['name']}"
-                    f"for the month {self.label}"
-                )
 
         remaining_expense_without_category = self.expense[
             ~self.expense.index.isin(list(self._all_found_category_indices))
@@ -79,4 +73,3 @@ class MonthlyExpense(expense.Expense):
                     f"There are {common_indices} common indices with "
                     f"category {category}... for the month {self.label}."
                 )
-

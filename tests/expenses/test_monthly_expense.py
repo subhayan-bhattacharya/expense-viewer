@@ -1,7 +1,9 @@
 """Test suite for the monthly_expense.py file."""
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
 import pytest
+
 import expense_viewer.expense.monthly_expense as monthly_expense
 
 

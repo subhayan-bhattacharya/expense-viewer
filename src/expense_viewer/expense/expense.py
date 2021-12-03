@@ -29,3 +29,9 @@ class Expense:
     def get_expense_summary_dataframe(self):
         """Get a dataframe of the expense summary for the month."""
         raise NotImplementedError
+
+    def get_expenses_report(self):
+        """Get a summary of expenses/credits for each month."""
+        raise NotImplementedError(
+            "This method is only implemented for overall expense object"
+        )

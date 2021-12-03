@@ -2,8 +2,8 @@
 import datetime
 from typing import Any, Dict, List
 
-import pandas as pd
 from dateutil.relativedelta import relativedelta
+import pandas as pd
 
 
 def get_full_condition_string(condition: Dict[str, Any]) -> str:
@@ -88,4 +88,4 @@ def get_next_month_label(month_year_label: str) -> str:
     """Get the next month of the month supplied as input."""
     datetime_object = datetime.datetime.strptime(month_year_label, "%B-%Y")
     next_month = datetime_object + relativedelta(months=1)
-    return next_month.strftime('%B-%Y')
+    return next_month.strftime("%B-%Y")

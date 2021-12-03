@@ -1,7 +1,9 @@
 """Test suite for utils module in the application."""
-import pytest
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
+import pytest
+
 import expense_viewer.utils as utils
 
 

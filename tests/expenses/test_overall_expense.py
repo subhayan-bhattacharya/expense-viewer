@@ -1,7 +1,9 @@
 """Test suite for the overall_expense.py module."""
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
 import pytest
+
 import expense_viewer.expense.overall_expense as overall_expense
 
 
@@ -19,7 +21,7 @@ def get_dummy_pandas_data():
         ],
         "Payment Details": ["desc1", "desc2", "desc3", "desc4", "desc5", "desc6"],
         "Debit": [100.00, 200.00, 110.10, 150.00, 140.00, 125.00],
-        "Credit": [330, 2500.89, 337.00, 333.00, 2500.89, 320.00],
+        "Credit": [0, 2500.89, 0, 0, 2500.89, 0],
         "Value date": [
             datetime.strptime("05/18/20", "%m/%d/%y"),
             datetime.strptime("11/18/20", "%m/%d/%y"),
@@ -39,7 +41,7 @@ def get_child_expense_dataframe_data_may():
         "Transaction Type": ["Debit Card Payment", "Debit Card Payment"],
         "Payment Details": ["desc3", "desc4"],
         "Debit": [110.1, 150.0],
-        "Credit": [337.0, 333.0],
+        "Credit": [0.0, 0.0],
         "Value date": [
             datetime.strptime("05/14/20", "%m/%d/%y"),
             datetime.strptime("05/14/20", "%m/%d/%y"),
@@ -58,7 +60,7 @@ def get_child_expense_dataframe_data_june():
         "Transaction Type": ["Debit Card Payment"],
         "Payment Details": ["desc6"],
         "Debit": [125.00],
-        "Credit": [320.00],
+        "Credit": [0.0],
         "Value date": [datetime.strptime("05/18/20", "%m/%d/%y")],
         "Indexes": [5],
     }

@@ -26,10 +26,3 @@ class CategoryExpense(expense.Expense):
                 )
                 # Since the child expense for this is the base class object which does not
                 # Have an add_child_expense method, further calls to that method are not done
-
-    def show_expense_summary_graph(self):
-        """Show the expense details for a category."""
-        if not self.child_expenses:
-            print("This category expense does not have any child expenses.")
-        else:
-            super().show_expense_summary_graph()

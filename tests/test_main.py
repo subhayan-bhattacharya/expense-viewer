@@ -1,12 +1,11 @@
-import pathlib
 import csv
-
+import pathlib
 
 import pandas as pd
 import pytest
 
-import expense_viewer.main as main
 import expense_viewer.exceptions as exceptions
+import expense_viewer.main as main
 
 
 def test_check_format_of_salary_statement_for_correct_format():
