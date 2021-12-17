@@ -16,8 +16,9 @@ from expense_viewer import get_expense_report
 
 config_file = "expense_config.yaml"
 transactions_dir = "/home/user/expenses/Transactions"
+bank = "Deutsche Bank"
 
-expense = get_expense_report(config_file, transactions_dir)
+expense = get_expense_report(config_file, transactions_dir, bank)
 expense.get_expenses_report()
 ```
 
@@ -29,8 +30,9 @@ from expense_viewer import get_expense_report
 
 config_file = "expense_config.yaml"
 transactions_dir = "/home/user/expenses/Transactions"
+bank = "Deutsche Bank"
 
-expense = get_expense_report(config_file, transactions_dir)
+expense = get_expense_report(config_file, transactions_dir, bank)
 expense_months = expense.get_child_expense_labels()
 october = expense.child_expenses["October"]
 october.expense
