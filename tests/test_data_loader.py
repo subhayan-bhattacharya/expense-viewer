@@ -5,13 +5,13 @@ import pandas as pd
 import pytest
 
 import expense_viewer.exceptions as exceptions
-import expense_viewer.main as main
+import expense_viewer.data_loader as loader
 
 
 def test_check_format_of_salary_statement_for_correct_format():
     """Test the function check_format_of_salary_statement works."""
     try:
-        main.check_format_of_salary_statement([pathlib.Path("/a/b/c/salary.csv")])
+        loader.check_format_of_salary_statement([pathlib.Path("/a/b/c/salary.csv")])
     except Exception:
         pytest.fail("Unexpected error")
 
@@ -19,11 +19,11 @@ def test_check_format_of_salary_statement_for_correct_format():
 def test_check_format_of_salary_statement_for_incorrect_format():
     """Test the function check_format_of_salary_statement fails for wrong format."""
     with pytest.raises(exceptions.WrongFormatError):
-        main.check_format_of_salary_statement([pathlib.Path("a/b/c/salary.xls")])
+        loader.check_format_of_salary_statement([pathlib.Path("a/b/c/salary.xls")])
 
 
 def test_load_details_from_expense_stmt(tmp_path):
-    """Test the function _load_details_from_expense_stmt."""
+    """Test the function _data_loader_deutsche_bank."""
     my_dummy_csv_data = [
         [1],
         [2],
@@ -43,7 +43,7 @@ def test_load_details_from_expense_stmt(tmp_path):
         for row in my_dummy_csv_data:
             writer.writerow(row)
 
-    output = main._load_details_from_expense_stmt(dummy_csv_file)
+    output = loader._data_loader_deutsche_bank(dummy_csv_file)
 
     expected_output = pd.DataFrame(
         {

@@ -1,7 +1,7 @@
 """Contains the code for displaying the expenses of a single month."""
 import collections
 import itertools
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 import warnings
 
 import omegaconf

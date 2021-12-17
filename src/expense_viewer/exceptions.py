@@ -24,3 +24,11 @@ class CouldNotLoadSalaryStmtError(Error):
 
 class ExpenseDataAlreadyInOtherExpenseError(Error):
     """When a salary statement could not be loaded."""
+
+
+class StatementPathNotADirectory(Error):
+    """When the statement path is not a directory."""
+
+
+class BankNotSupportedError(Error):
+    """When the bank is not supported."""
