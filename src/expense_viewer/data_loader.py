@@ -53,7 +53,35 @@ def _data_loader_revolut(expense_statement: pathlib.Path) -> pd.core.frame.DataF
     """
     columns_to_use = ["Type", "Completed Date", "Description", "Amount"]
 
-    return pd.read_csv(expense_statement, usecols=columns_to_use)
+    try:
+        transactions = pd.read_csv(expense_statement, usecols=columns_to_use)
+        renamed_transactions = transactions.rename(
+            columns={
+                "Completed Date": "Value Date",
+                "Description": "Payment Details",
+                "Type": "Transaction Type",
+                "Amount": "Credit",
+            }
+        )
+        renamed_transactions["Value Date"] = renamed_transactions["Value Date"].astype(
+            "datetime64"
+        )
+        renamed_transactions["Value Date"] = pd.to_datetime(
+            renamed_transactions["Value Date"].dt.strftime("%Y-%m-%d")
+        )
+        renamed_transactions["Credit"] = renamed_transactions["Credit"].astype(
+            "float64"
+        )
+        renamed_transactions["Debit"] = 0.0
+        renamed_transactions.loc[renamed_transactions["Credit"] < 0.0, "Debit"] = (
+            renamed_transactions["Credit"] * -1
+        )
+        renamed_transactions.loc[renamed_transactions["Credit"] < 0.0, "Credit"] = 0.0
+        return renamed_transactions
+    except Exception as exc:
+        message = f"Could not load the details from {expense_statement}"
+        logger.error(message, exc_info=True)
+        raise exceptions.CouldNotLoadSalaryStmtError(message=message) from exc
 
 
 def _data_loader_deutsche_bank(
