@@ -1,5 +1,5 @@
 """File for monthly expenses."""
-from typing import Dict, Set
+from typing import Dict, Set, List, Optional
 
 import omegaconf
 import pandas as pd
@@ -17,19 +17,30 @@ class MonthlyExpense(expense.Expense):
         self,
         expense: pd.DataFrame,
         config: omegaconf.dictconfig.DictConfig,
+        row_indices_to_ignore: Optional[List[int]] = None,
         label: str = "Overall",
     ) -> None:
         super().__init__(expense=expense, config=config, label=label)
         self._all_found_category_indices: Set[int] = set()
         self._category_indices_map: Dict[str, Set[int]] = dict()
+        self._row_indices_to_ignore = (
+            row_indices_to_ignore if row_indices_to_ignore is not None else []
+        )
+        self._actual_expense_data = self.expense
 
     def get_total_expense_sum(self) -> float:
         """Sum all the expenses and give back a total sum."""
-        return self.expense["Debit"].sum()
+        return self._actual_expense_data["Debit"].sum()
 
     def add_child_expenses(self):
         """Add the child expenses for the month's items and then delegate."""
-        data = self.expense
+
+        # Remove the
+        self._actual_expense_data = self.expense[
+            ~self.expense.index.isin(self._row_indices_to_ignore)
+        ]
+
+        data = self._actual_expense_data
         for category in self.config:
             condition_str = utils.get_full_condition_string(category)
 
@@ -56,8 +67,10 @@ class MonthlyExpense(expense.Expense):
                 )
                 self.child_expenses[category["name"]].add_child_expenses()
 
-        remaining_expense_without_category = self.expense[
-            ~self.expense.index.isin(list(self._all_found_category_indices))
+        remaining_expense_without_category = data[
+            ~self._actual_expense_data.index.isin(
+                list(self._all_found_category_indices)
+            )
         ]
 
         if not remaining_expense_without_category.empty:

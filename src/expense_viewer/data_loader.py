@@ -57,17 +57,17 @@ def _data_loader_revolut(expense_statement: pathlib.Path) -> pd.core.frame.DataF
         transactions = pd.read_csv(expense_statement, usecols=columns_to_use)
         renamed_transactions = transactions.rename(
             columns={
-                "Completed Date": "Value Date",
+                "Completed Date": "Value date",
                 "Description": "Payment Details",
                 "Type": "Transaction Type",
                 "Amount": "Credit",
             }
         )
-        renamed_transactions["Value Date"] = renamed_transactions["Value Date"].astype(
+        renamed_transactions["Value date"] = renamed_transactions["Value date"].astype(
             "datetime64"
         )
-        renamed_transactions["Value Date"] = pd.to_datetime(
-            renamed_transactions["Value Date"].dt.strftime("%Y-%m-%d")
+        renamed_transactions["Value date"] = pd.to_datetime(
+            renamed_transactions["Value date"].dt.strftime("%Y-%m-%d")
         )
         renamed_transactions["Credit"] = renamed_transactions["Credit"].astype(
             "float64"
