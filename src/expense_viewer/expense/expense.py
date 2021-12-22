@@ -22,13 +22,11 @@ class Expense:
         return list(self.child_expenses.keys()) if self.child_expenses else None
 
     def get_total_expense_sum(self) -> float:
-        """Sum all the expenses and give back a total sum."""
-        expense = sum(self.expense["Debit"]) - sum(self.expense["Credit"])
-        return expense
-
-    def get_expense_summary_dataframe(self):
-        """Get a dataframe of the expense summary for the month."""
-        raise NotImplementedError
+        """Show sum total of all the expenses."""
+        raise NotImplementedError(
+            "This method does not make sense of the Overall expense.."
+            "please check child expenses."
+        )
 
     def get_expenses_report(self):
         """Get a summary of expenses/credits for each month."""

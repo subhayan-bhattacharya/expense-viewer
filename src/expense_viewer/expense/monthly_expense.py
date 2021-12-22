@@ -23,6 +23,10 @@ class MonthlyExpense(expense.Expense):
         self._all_found_category_indices: Set[int] = set()
         self._category_indices_map: Dict[str, Set[int]] = dict()
 
+    def get_total_expense_sum(self) -> float:
+        """Sum all the expenses and give back a total sum."""
+        return self.expense["Debit"].sum()
+
     def add_child_expenses(self):
         """Add the child expenses for the month's items and then delegate."""
         data = self.expense
