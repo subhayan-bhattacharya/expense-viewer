@@ -35,7 +35,7 @@ class MonthlyExpense(expense.Expense):
     def add_child_expenses(self):
         """Add the child expenses for the month's items and then delegate."""
 
-        # Remove the
+        # Remove the row indices which are sent as indices to ignore
         self._actual_expense_data = self.expense[
             ~self.expense.index.isin(self._row_indices_to_ignore)
         ]
