@@ -27,6 +27,7 @@ class OverallExpense(expense.Expense):
         self.salary_savings_credit_data_per_month: Dict[
             str, Dict[str, int]
         ] = collections.defaultdict(dict)
+        self.ignored_expenses: Dict[str, pd.DataFrame] = dict()
 
     def get_expenses_report(self) -> pd.DataFrame:
         """Get a summary of expenses/credits for each month."""
@@ -80,14 +81,27 @@ class OverallExpense(expense.Expense):
                 None,
             )
         ):
+            month_year_label = utils.get_expense_month_year(data)
+            # Add the logic for excluding rows which have to be ignored.
+            if "ignored" in self.config:
+                ignored = self.config["ignored"]
+                ignored_data_row_indexes = utils.get_row_index_for_matching_columns(
+                    ignored, data
+                )
+                ignored_expenses = data.index.isin(ignored_data_row_indexes)
+                monthly_data_without_ignored_rows = data[~ignored_expenses]
+                self.ignored_expenses[month_year_label] = ignored_expenses
+            else:
+                monthly_data_without_ignored_rows = data
+
             # Check if there are any credits which happened in this month apart from salary
             # if yes then we save them for later summary report
-            credit_data_for_month = data[data[_CREDIT_COLUMN_NAME] > 0]
+            credit_data_for_month = monthly_data_without_ignored_rows[
+                monthly_data_without_ignored_rows[_CREDIT_COLUMN_NAME] > 0
+            ]
             salary_data_for_month = int(
                 self.expense.iloc[[salary_row_indexes[index]]]["Credit"]
             )
-
-            month_year_label = utils.get_expense_month_year(data)
 
             if month_year_label in self.child_expenses.keys():
                 # Check if the month is already added then select the next month
@@ -107,25 +121,33 @@ class OverallExpense(expense.Expense):
             self.salary_savings_credit_data_per_month[month_year_label][
                 "Salary"
             ] = salary_data_for_month
+            # Let's say the amount of money that you save in a month is transferred to a vault
+            # or some other account and you want to consider that transfer as savings
+            # and do not want to consider that as an expense
             if "savings" in self.config:
                 savings_data_row_indices = utils.get_row_index_for_matching_columns(
-                    condition=self.config["savings"], data=data
+                    condition=self.config["savings"],
+                    data=monthly_data_without_ignored_rows,
                 )
-                expense_considered_as_savings = data[
-                    data.index.isin(savings_data_row_indices)
+                expense_considered_as_savings = monthly_data_without_ignored_rows[
+                    monthly_data_without_ignored_rows.index.isin(
+                        savings_data_row_indices
+                    )
                 ]["Debit"].sum()
                 self.salary_savings_credit_data_per_month[month_year_label][
                     "Vaulted Savings"
                 ] = expense_considered_as_savings
                 self.child_expenses[month_year_label] = monthly_expense.MonthlyExpense(
-                    expense=data,
+                    expense=monthly_data_without_ignored_rows,
                     config=expense_categories,
                     label=month_year_label,
                     row_indices_to_ignore=savings_data_row_indices,
                 )
             else:
                 self.child_expenses[month_year_label] = monthly_expense.MonthlyExpense(
-                    expense=data, config=expense_categories, label=month_year_label
+                    expense=monthly_data_without_ignored_rows,
+                    config=expense_categories,
+                    label=month_year_label,
                 )
             # Delegate to the child object to add its own expenses
             self.child_expenses[month_year_label].add_child_expenses()
