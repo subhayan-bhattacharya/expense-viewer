@@ -90,7 +90,7 @@ class OverallExpense(expense.Expense):
                 )
                 ignored_expenses = data.index.isin(ignored_data_row_indexes)
                 monthly_data_without_ignored_rows = data[~ignored_expenses]
-                self.ignored_expenses[month_year_label] = ignored_expenses
+                self.ignored_expenses[month_year_label] = data[ignored_expenses]
             else:
                 monthly_data_without_ignored_rows = data
 
