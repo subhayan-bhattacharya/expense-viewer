@@ -73,13 +73,18 @@ def get_expense_month_year(expense: pd.DataFrame) -> str:
 
     months = expense_copy["Value date"].dt.month
     year = expense_copy["Value date"].dt.year
+    try:
+        most_frequent_month_int = months.value_counts().idxmax()
+        most_frequent_month_year = year.value_counts().idxmax()
 
-    most_frequent_month_int = months.value_counts().idxmax()
-    most_frequent_month_year = year.value_counts().idxmax()
+        most_frequent_month_str = datetime.date(1900, most_frequent_month_int, 1).strftime(
+            "%B"
+        )
+    except Exception as error:
+        print("The expense causing the issue...")
+        print(expense_copy)
+        raise error
 
-    most_frequent_month_str = datetime.date(1900, most_frequent_month_int, 1).strftime(
-        "%B"
-    )
     # Convert the month number(1/2) into a month string(January/February etc)
     return f"{most_frequent_month_str}-{most_frequent_month_year}"
 

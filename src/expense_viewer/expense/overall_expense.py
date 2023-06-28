@@ -81,6 +81,8 @@ class OverallExpense(expense.Expense):
                 None,
             )
         ):
+            if data.empty:
+                continue
             month_year_label = utils.get_expense_month_year(data)
             # Add the logic for excluding rows which have to be ignored.
             if "ignored" in self.config:
