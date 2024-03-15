@@ -101,6 +101,8 @@ def _data_loader_deutsche_bank(
         "Debit",
         "Credit",
         "Value date",
+        "Beneficiary / Originator",
+        "IBAN"
     ]
 
     try:
